@@ -10,15 +10,20 @@ generateTradeOffData <- function(FmListX, FmListY, x0, y0, rx, ry, Kx, Ky, c, nu
     FmX = tradeOffData$FmX[row]
     FmY = tradeOffData$FmY[row]
     
-    timeSeries = simulatePopulations(x0, y0, rx, ry, Kx, Ky, c, numTimeSteps)
+    timeSeries = simulatePopulations_noise(x0, y0, rx, ry, Kx, Ky, c, FmX, FmY)
     
-    meanX = timeSeries$x[(numTimeSteps - numMeanYears):numTimeSteps]
-    meanY = timeSeries$y[(numTimeSteps - numMeanYears):numTimeSteps]
+    meanX = mean(timeSeries$x[(numTimeSteps - numMeanYears):numTimeSteps])
+    meanY = mean(timeSeries$y[(numTimeSteps - numMeanYears):numTimeSteps])
     
     tradeOffData$xBiomass[row] = meanX
     tradeOffData$yBiomass[row] = meanY
   }
-  
   return(tradeOffData)
-  
 }
+
+
+# test based on Perretti et al 2013 parameter values
+FmListX = seq(0, 0.2, by = 0.01) 
+FmListY = seq(0, 0.2, by = 0.01)
+testTradeOff1 <- generateTradeOffData(FmListX, FmListY, x0 = 0.4, y0 = 0.4, rx = 3.8, ry = 3.7, 
+                                      Kx = 1, Ky = 1, c = 0.1)

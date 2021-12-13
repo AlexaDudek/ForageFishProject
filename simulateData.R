@@ -27,7 +27,7 @@ simulatePopulations <- function(x0, y0, rx, ry, Kx, Ky, c, numTimeSteps = 50){
 fx <- 0.105
 fy <- 0.108
 
-simulatePopulations_noise <- function(x0, y0, rx, ry, Kx, Ky, c, numTimeSteps = 50, fx, fy){
+simulatePopulations_noise <- function(x0, y0, rx, ry, Kx, Ky, c, fx, fy, numTimeSteps = 50){
   populations =  data.frame(time = 1:numTimeSteps, x = numeric(numTimeSteps), y = numeric(numTimeSteps))
   for(i in 1:50){
     populations$x[i] = forageFishEquation_noise(x0, y0, rx, Kx, c, fx)
