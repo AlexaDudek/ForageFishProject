@@ -36,5 +36,6 @@ ggplot(testPopulations1, aes(x = x, y = y)) +
   geom_line() +
   theme_bw() + 
   labs(x = "Forage Fish", y = "Predator", title = "Tradeoff?")
+
 ```
 
