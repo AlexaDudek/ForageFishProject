@@ -15,13 +15,20 @@ library(ggplot2)
 
 
 ```{r Initial Perretti Model Test Plots}
+
+# get mean from last 20 time steps
+meanX20 = mean(testPopulations1$x[30:50])
+meanY20 = mean(testPopulations1$y[30:50])
+
 ggplot(testPopulations1, aes(x = time, y = x)) + 
   geom_line() +
+  geom_function(fun = function(x) meanX20, color = "blue") +
   theme_bw() + 
   labs(x = "Time Step", y = "Population", title = "Forage Fish Simulated Time Series")
 
 ggplot(testPopulations1, aes(x = time, y = y)) + 
   geom_line() +
+  geom_function(fun = function(x) meanY20, color = "blue") +
   theme_bw() + 
   labs(x = "Time Step", y = "Population", title = "Predator Fish Simulated Time Series")
 

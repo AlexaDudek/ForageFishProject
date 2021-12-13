@@ -9,7 +9,7 @@ Kx = 1
 Ky = 1
 c = 0.1
 
-simulatePopulations <- function(x0, y0, rx, ry, Kx, Ky, c, numTimeSteps){
+simulatePopulations <- function(x0, y0, rx, ry, Kx, Ky, c, numTimeSteps = 50){
   populations =  data.frame(time = 1:numTimeSteps, x = numeric(numTimeSteps), y = numeric(numTimeSteps))
   for(i in 1:50){
     populations$x[i] = forageFishEquation(x0, y0, rx, Kx, c)
