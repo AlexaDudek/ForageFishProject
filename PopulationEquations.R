@@ -8,5 +8,6 @@ forageFishEquation <- function(x0, y0, r, K, c){
 
 # Predator Fish Equation
 predatorEquation <- function(y0, x0, r, K, c){
-  y1 = (y0*r(1-(y0/K))) + (c*x0*y0)
+  y1 = (y0*r*(1-(y0/K))) + (c*x0*y0)
+  return(y1)
 }

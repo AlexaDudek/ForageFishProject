@@ -1,0 +1,33 @@
+---
+title: "PlottingThings"
+author: "Alexa Dudek"
+date: "12/13/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r Libraries}
+library(ggplot2)
+```
+
+
+```{r Initial Perretti Model Test Plots}
+ggplot(testPopulations1, aes(x = time, y = x)) + 
+  geom_line() +
+  theme_bw() + 
+  labs(x = "Time Step", y = "Population", title = "Forage Fish Simulated Time Series")
+
+ggplot(testPopulations1, aes(x = time, y = y)) + 
+  geom_line() +
+  theme_bw() + 
+  labs(x = "Time Step", y = "Population", title = "Predator Fish Simulated Time Series")
+
+ggplot(testPopulations1, aes(x = x, y = y)) + 
+  geom_line() +
+  theme_bw() + 
+  labs(x = "Forage Fish", y = "Predator", title = "Tradeoff?")
+```
+
