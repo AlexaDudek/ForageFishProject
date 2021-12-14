@@ -38,15 +38,15 @@ predatorEquation <- function(y0, x0, r, K, c){
 #Forage Fish Equation, process noise added and fishing mortality 
 forageFishEquation_noise <- function(x0, y0, r, K, c, f){
   
-  x1 = ((x0*r*(1-(x0/K))) - (c*x0*y0) - (f*x0))*rlnorm(1, meanlog=0, sdlog=0.005)
+  x1 = ((x0*r*(1-(x0/K))) - (c*x0*y0))*rlnorm(1, meanlog=0, sdlog=0.005)
   
-  return(x1) #returns pop size next year
+  return(x1-(f*x0)) #returns pop size next year
 }
 
 #Predator Fish Equation, process noise added and fishing mortality 
 predatorEquation_noise <- function(y0, x0, r, K, c, f){
   
-  y1 = ((y0*r*(1-(y0/K))) + (c*x0*y0) - (f*y0))*rlnorm(1, meanlog=0, sdlog=0.005)
+  y1 = ((y0*r*(1-(y0/K))) + (c*x0*y0))*rlnorm(1, meanlog=0, sdlog=0.005)
   
-  return(y1) #returns pop size next year
+  return(y1-(f*y0)) #returns pop size next year
 }

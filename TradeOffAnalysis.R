@@ -11,9 +11,12 @@
 generateTradeOffData <- function(FmListX, FmListY, x0, y0, rx, ry, Kx, Ky, c, numTimeSteps = 50, numMeanYears = 20){
   #creating grid for data to be stored in, adding fishing mortalities as columns
   tradeOffData = expand.grid(FmX = FmListX, FmY = FmListY)
-  #adding columns for biomass data to be entered in
+  #adding columns for biomass data
   tradeOffData$xBiomass = NA
   tradeOffData$yBiomass = NA
+  #adding columns for yield data
+  tradeOffData$yYield = NA
+  tradeOffData$xYield = NA
   
   numRows = nrow(tradeOffData)
   
@@ -29,12 +32,14 @@ generateTradeOffData <- function(FmListX, FmListY, x0, y0, rx, ry, Kx, Ky, c, nu
     
     tradeOffData$xBiomass[row] = meanX
     tradeOffData$yBiomass[row] = meanY
+    tradeOffData$yYield[row] = meanY*FmY
+    tradeOffData$xYield[row] = meanX*FmX
   }
   return(tradeOffData) #returning data frame with data from all simulations
 }
 
 
-
+#fishing mortality lists to loop over
 FmListX = seq(0, 0.2, by = 0.01) 
 FmListY = seq(0, 0.2, by = 0.01)
 
