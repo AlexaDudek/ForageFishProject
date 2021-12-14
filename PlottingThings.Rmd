@@ -118,7 +118,9 @@ plotTradeOff <- function(dataframe){
 FmListX = seq(0, 0.4, by = 0.01) 
 FmListY = seq(0, 0.4, by = 0.01)
 
+#creating data
 varySBGrowthRateTO <- generateTradeOffData(FmListX, FmListY, 0.4, 0.4, 3.8, 2.5, 1.0, 1.0, 0.1, 50, 50)
+#plotting data
 plotTradeOff(varySBGrowthRateTO)
 
 ```
