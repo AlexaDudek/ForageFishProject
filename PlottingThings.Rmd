@@ -39,3 +39,18 @@ ggplot(testPopulations1, aes(x = x, y = y)) +
 
 ```
 
+
+```{r Trade Off Analysis Test 1 Plot}
+testTradeOff1Plot <- ggplot(testTradeOff1, aes(x = FmX, y = FmY, z = yBiomass)) +
+  geom_contour_filled() +
+  labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = "Trade Off Contour Analysis")
+
+testTradeOff2Plot <- ggplot(testTradeOff2, aes(x = FmX, y = FmY, z = yBiomass)) +
+  geom_contour_filled() +
+  labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = "Trade Off Contour Analysis on 200 years")
+
+print(testTradeOff2Plot)
+
+print(testTradeOff1Plot)
+```
+
