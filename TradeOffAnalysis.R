@@ -22,7 +22,7 @@ generateTradeOffData <- function(FmListX, FmListY, x0, y0, rx, ry, Kx, Ky, c, nu
     FmX = tradeOffData$FmX[row]
     FmY = tradeOffData$FmY[row]
     
-    timeSeries = simulatePopulations_noise(x0, y0, rx, ry, Kx, Ky, c, FmX, FmY)
+    timeSeries = simulatePopulations_noise(x0, y0, rx, ry, Kx, Ky, c, FmX, FmY, numTimeSteps)
     
     meanX = mean(timeSeries$x[(numTimeSteps - (numMeanYears-1)):numTimeSteps])
     meanY = mean(timeSeries$y[(numTimeSteps - (numMeanYears-1)):numTimeSteps])
