@@ -91,7 +91,8 @@ plotTests(varySBGrowthRateTest)
 
 plotTradeOff <- function(dataframe){
   plot <- ggplot(dataframe, aes(x = FmX, y = FmY, z = yBiomass)) +
-    geom_contour_filled() +
+    geom_contour_filled() + geom_contour(color="grey")+
+    geom_contour(color="black",breaks=0.58)+
     labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = "Trade Off Contour Analysis")
   print(plot)
 }
