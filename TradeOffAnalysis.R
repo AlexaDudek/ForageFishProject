@@ -14,6 +14,8 @@ generateTradeOffData <- function(FmListX, FmListY, x0, y0, rx, ry, Kx, Ky, c, nu
   #adding columns for biomass data to be entered in
   tradeOffData$xBiomass = NA
   tradeOffData$yBiomass = NA
+  tradeOffData$yYield = NA
+  tradeOffData$xYield = NA
   
   numRows = nrow(tradeOffData)
   
@@ -29,6 +31,8 @@ generateTradeOffData <- function(FmListX, FmListY, x0, y0, rx, ry, Kx, Ky, c, nu
     
     tradeOffData$xBiomass[row] = meanX
     tradeOffData$yBiomass[row] = meanY
+    tradeOffData$yYield[row] = meanY*FmY
+    tradeOffData$xYield[row] = meanX*FmX
   }
   return(tradeOffData) #returning data frame with data from all simulations
 }
