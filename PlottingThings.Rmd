@@ -9,11 +9,12 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+Loading ggplot
 ```{r Libraries}
 library(ggplot2)
 ```
 
-
+Graphs of data simulated by Perretti models. Graphs shown are of forage fish over time, predator over time, and trade off over time. 
 ```{r Initial Perretti Model Test Plots}
 
 # get mean from last 20 time steps
@@ -39,7 +40,7 @@ ggplot(testPopulations1, aes(x = x, y = y)) +
 
 ```
 
-
+This graph was our initial attempt at plotting the contours. Biomass is represented as an average of the last 20 years of each simulation. Growth rates are 3.8 for forage fish and 3.7 for predator. 
 ```{r Trade Off Analysis Test 1 Plot}
 #saving for reference, not really using this anymore
 
@@ -88,7 +89,7 @@ varySBGrowthRateTest = simulatePopulations_noise(0.4, 0.4, 3.8, 2.5, 1.0, 1.0, 0
 plotTests(varySBGrowthRateTest)
 
 ```
-
+Below is a function for graphing data from either model. Data must be simulated first with desired model and stored as a variable that can be passed into this plotting function. 
 ```{r Plot Trade Off Tests}
 
 #plotTradeOff - takes a data frame as an input (data frame contains fishing mortalities of both forage fish and predator, biomass of forage fish and predator, and yield of forage fish and predator). The function returns three graphs: one showing contours of predator biomass, one showing contours of predator yield, and one showing contours of forage fish yield. 
@@ -113,15 +114,36 @@ plotTradeOff <- function(dataframe){
   print(plot3)
 }
 
-# generateTradeOffData <- function(FmListX, FmListY, x0, y0, rx, ry, Kx, Ky, c, numTimeSteps = 50, numMeanYears = 20)
+```
+
+
+Next, we test the plotting by creating a data frame, varySBGrowthRateTO, and passing it into the plotting function. This data uses the Perretti model.
+```{r}
+# generateTradeOff_Perretti <- function(FmListX, FmListY, x0, y0, rx, ry, Kx, Ky, c, numTimeSteps = 50, numMeanYears = 20)
 
 FmListX = seq(0, 0.4, by = 0.01) 
 FmListY = seq(0, 0.4, by = 0.01)
 
-#creating data
-varySBGrowthRateTO <- generateTradeOffData(FmListX, FmListY, 0.4, 0.4, 3.8, 2.5, 1.0, 1.0, 0.1, 50, 50)
+#creating data--50 years, averaging all 50 years for biomass
+varySBGrowthRateTO <- generateTradeOff_Perretti(FmListX, FmListY, 0.4, 0.4, 3.8, 2.5, 1.0, 1.0, 0.1, 50, 50)
 #plotting data
 plotTradeOff(varySBGrowthRateTO)
+```
+
+
+Now we plot data using the Ricker model. 
+```{r}
+#generateTradeOff_Ricker <- function(FmListX, FmListY, x0, y0, rx, ry, Kx, Ky, c, numTimeSteps = 50, numMeanYears = 20)
+
+FmListX = seq(0, 0.4, by = 0.01) 
+FmListY = seq(0, 0.4, by = 0.01)
+
+#creating data--50 years, averaging all 50 years for biomass
+RickerTest <- generateTradeOff_Ricker(FmListX, FmListY, 0.4, 0.4, 3.8, 2.5, 1.0, 1.0, 0, 200, 200)
+#plotting data
+plotTradeOff(RickerTest)
 
 ```
+
+
 
