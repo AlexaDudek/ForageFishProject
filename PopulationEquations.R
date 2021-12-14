@@ -1,26 +1,50 @@
 # Data generation functions
-##Equations from Perretti et al. paper, two species approach
-###These are used to provide the next year population size. Further in the project,
-###these functions are used in loops to create simulated time series of predator and prey 
-###relationships. 
 
 
+#Parameters
 #x0 <- initial forage fish pop size
 #y0 <- initial predator fish pop size
 #r <- growth rate
 #K <- carrying capacity
 #c <- coupling strength 
+#f <- fishing mortality
+
+
+#Ricker Model
+#Equations are similar to Perretti et al., but they use the Ricker model to calculate
+#population size. Noise and fishing mortality are added.
+
+forageFishRicker_noise <- function(x0, y0, r, K, c, f){
+  
+  x1 = ((x0*exp(r*(1-(x0/K)))) - (c*x0*y0))*rlnorm(1, meanlog=0, sdlog=0.005)
+  
+  return(x1-(f*x1)) #returns pop size next year - fishing
+}
+
+
+predatorRicker_noise <- function(y0, x0, r, K, c, f){
+  
+  y1 = ((y0*exp(r*(1-(y0/K)))) + (c*x0*y0))*rlnorm(1, meanlog=0, sdlog=0.005)
+  
+  return(y1-(f*y1)) #returns pop size next year - fishing
+}
+
+#Perretti Model
+##Equations from Perretti et al. paper, two species approach
+###These are used to provide the next year population size. Further in the project,
+###these functions are used in loops to create simulated time series of predator and prey 
+###relationships.
 
 # Forage Fish Equation, no process noise
-forageFishEquation <- function(x0, y0, r, K, c){
+forageFishPerretti <- function(x0, y0, r, K, c){
  
-   x1 = (x0*r*(1-(x0/K))) - (c*x0*y0)
+   x1 = ((x0*r*(1-(x0/K))) - (c*x0*y0))*rlnorm(1, meanlog=0, sdlog=0.005)
   
    return(x1) #returns pop size next year
 }
 
 # Predator Fish Equation, no process noise
-predatorEquation <- function(y0, x0, r, K, c){
+predatorPerretti <- function(y0, x0, r, K, c){
   
   y1 = (y0*r*(1-(y0/K))) + (c*x0*y0)
   
@@ -36,17 +60,17 @@ predatorEquation <- function(y0, x0, r, K, c){
 #These values were chosen based on the Perretti et al. paper. 
 
 #Forage Fish Equation, process noise added and fishing mortality 
-forageFishEquation_noise <- function(x0, y0, r, K, c, f){
+forageFishPerretti_noise <- function(x0, y0, r, K, c, f){
   
   x1 = ((x0*r*(1-(x0/K))) - (c*x0*y0))*rlnorm(1, meanlog=0, sdlog=0.005)
   
-  return(x1-(f*x0)) #returns pop size next year
+  return(x1-(f*x1)) #returns pop size next year - fishing
 }
 
 #Predator Fish Equation, process noise added and fishing mortality 
-predatorEquation_noise <- function(y0, x0, r, K, c, f){
+predatorPerretti_noise <- function(y0, x0, r, K, c, f){
   
   y1 = ((y0*r*(1-(y0/K))) + (c*x0*y0))*rlnorm(1, meanlog=0, sdlog=0.005)
   
-  return(y1-(f*y0)) #returns pop size next year
+  return(y1-(f*y1)) #returns pop size next year - fishing
 }
