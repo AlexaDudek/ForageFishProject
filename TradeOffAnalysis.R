@@ -1,11 +1,23 @@
+#This file contains a function to generate multiple time series of data. Each simulation has a different
+#fishing mortality, specified by the FmListX and FmListY parameters. It uses the previous
+#simulatePopulations_noise function to create one time series. Data from the end of the time series
+#(default set to last 20 years) is averaged for both species and added to a data frame. This
+#data is then plotted to show a trade-off relationship between the two species. 
+
+
+#FmListX <- a list of fishing mortalities to loop over for the forage fish
+#FmListY <- a list of fishing mortalities to loop over for the predator fish
 
 generateTradeOffData <- function(FmListX, FmListY, x0, y0, rx, ry, Kx, Ky, c, numTimeSteps = 50, numMeanYears = 20){
+  #creating grid for data to be stored in, adding fishing mortalities as columns
   tradeOffData = expand.grid(FmX = FmListX, FmY = FmListY)
+  #adding columns for biomass data to be entered in
   tradeOffData$xBiomass = NA
   tradeOffData$yBiomass = NA
   
   numRows = nrow(tradeOffData)
   
+  #loop to complete a simulation and add its data to the data frame
   for(row in 1:numRows){
     FmX = tradeOffData$FmX[row]
     FmY = tradeOffData$FmY[row]
@@ -18,7 +30,7 @@ generateTradeOffData <- function(FmListX, FmListY, x0, y0, rx, ry, Kx, Ky, c, nu
     tradeOffData$xBiomass[row] = meanX
     tradeOffData$yBiomass[row] = meanY
   }
-  return(tradeOffData)
+  return(tradeOffData) #returning data frame with data from all simulations
 }
 
 
