@@ -38,6 +38,15 @@ simulatePerretti_noise <- function(x0, y0, rx, ry, Kx, Ky, c, fx, fy, numTimeSte
   return(populations) #returns time series with data for both populations in a data frame
 } 
 
+#parameters
+x0 <- 0.4
+y0 <- 0.04
+Kx <- 1.0
+Ky <- 0.1
+rx <- 3.8
+ry <- 0.844
+c <- 0.1
+
 #testing without noise, graphed in PlottingThings.Rmd
 testPopulations1 = simulatePerretti(x0, y0, rx, ry, Kx, Ky, c, 50)
 
