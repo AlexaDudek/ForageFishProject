@@ -145,5 +145,8 @@ plotTradeOff(RickerTest)
 
 ```
 
+```{r}
+plotTests(ts)
+```
 
 
