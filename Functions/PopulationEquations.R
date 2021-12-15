@@ -16,17 +16,23 @@
 
 forageFishRicker_noise <- function(x0, y0, r, K, c, f){
   
+  #population without fishing
   x1 = ((x0*exp(r*(1-(x0/K)))) - (c*x0*y0))*rlnorm(1, meanlog=0, sdlog=0.005)
+  #population after fishing
+  x1f = x1 - (f*x1)
   
-  return(x1-(f*x1)) #returns pop size next year - fishing
+  return(x1f) #returns population next year after fishing
 }
 
 
 predatorRicker_noise <- function(y0, x0, r, K, c, f){
   
+  #population without fishing
   y1 = ((y0*exp(r*(1-(y0/K)))) + ((c/5.8)*x0*y0))*rlnorm(1, meanlog=0, sdlog=0.005)
+  #population after fishing
+  y1f = y1 - (f*y1)
   
-  return(y1-(f*y1)) #returns pop size next year - fishing
+  return(y1f) #returns population next year after fishing
 }
 
 #Perretti Model
