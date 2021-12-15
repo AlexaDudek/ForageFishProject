@@ -5,14 +5,7 @@
 #It has two additional parameters for fishing mortality of both species. The third equation uses the
 #Ricker model with noise and fishing mortality added. 
 
-# Perretti Two-species model parameters (taken from the supplemental data of Perretti et al.):
-x0 = 0.4
-y0 = 0.4
-rx = 3.8
-ry = 3.7
-Kx = 1
-Ky = 1
-c = 0.1
+
 
 simulatePerretti <- function(x0, y0, rx, ry, Kx, Ky, c, numTimeSteps = 50){
   populations =  data.frame(time = 1:numTimeSteps, x = numeric(numTimeSteps), y = numeric(numTimeSteps))
