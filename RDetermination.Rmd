@@ -1,0 +1,127 @@
+---
+title: "R Determination"
+author: "Alexa Dudek"
+date: "12/14/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+```
+
+
+```{r}
+setwd("/Users/alexa/Desktop/QFA_R/Lab6_QFA")
+load("DBdata[asmt][v4.495].RData")
+```
+```{r SB Data Wrangling}
+stock_US_East <- subset(stock,region=="US East Coast")
+
+# Get SB stock ID
+SB_stockID = subset(stock_US_East,grepl("striped bass",commonname,ignore.case=TRUE))$stockid
+
+# Isolate SB time series from 'timeseries' dataset
+SB_timeseries = subset(timeseries, stockid == SB_stockID)
+
+# Isolate Recruitment (R), Spawning-Stock Biomass (SSB), Total Catch (TC)
+unique(SB_timeseries$tsid)
+# Recruitment tsid = R-E00
+SB_plotR = subset(SB_timeseries, tsid=="R-E00")
+SB_R = subset(SB_timeseries, tsid=="R-E00")[, c("tsyear", "tsvalue")]
+# Spawning-stock tsid = SSB-MT
+SB_plotSSB = subset(SB_timeseries, tsid=="SSB-MT")
+
+SB_SSB = as.data.frame(cbind(SB_plotSSB$tsyear, SB_plotSSB$tsvalue))
+
+colnames(SB_SSB)[1] <- "tsyearSSB"
+colnames(SB_SSB)[2] <- "tsvalueSSB"
+
+# Total catch tsid = TCbest-MT
+SB_plotTC = subset(SB_timeseries, tsid=="TCbest-MT")
+SB_TC = subset(SB_timeseries, tsid=="TCbest-MT")[, c("tsyear", "tsvalue")]
+
+# Combined data 
+SB_all = rbind(SB_plotR, SB_plotSSB)
+```
+
+```{r Menhaden Data Wrangling}
+
+# Get M stock ID
+M_stockID = subset(stock_US_East,grepl("menhaden",commonname,ignore.case=TRUE))$stockid
+
+# Isolate SB time series from 'timeseries' dataset
+M_timeseries = subset(timeseries, stockid == M_stockID)
+
+# Isolate Recruitment (R), Spawning-Stock Biomass (SSB), Total Catch (TC)
+unique(M_timeseries$tsid)
+
+# Recruitment tsid = R-E00
+M_plotR = subset(M_timeseries, tsid=="R-E00")
+M_R = subset(M_timeseries, tsid=="R-E00")[, c("tsyear", "tsvalue")]
+
+
+# Spawning-stock tsid = SSB-MT
+M_plotSSB1 = subset(M_timeseries, tsid=="TB-MT")
+M_SSB1 = subset(M_timeseries, tsid=="TB-MT")[, c("tsyear", "tsvalue")]
+
+colnames(M_SSB1)[1] <- "tsyearSSB"
+colnames(M_SSB1)[2] <- "tsvalueSSB"
+
+
+
+M_plotSSB2 = subset(M_timeseries, tsid=="TBbest-MT")
+M_SSB2 = subset(M_timeseries, tsid=="TBbest-MT")[, c("tsyear", "tsvalue")]
+
+colnames(M_SSB2)[1] <- "tsyear2"
+colnames(M_SSB2)[2] <- "tsvalue2"
+
+M_SSB = cbind(M_SSB1, M_SSB2)
+
+
+ggplot(M_SSB, aes(x = tsvalueSSB, y = tsvalue2)) + 
+  geom_line() +
+  theme_bw() + 
+  labs(x = "TB-MT", y = "TBbest-MT", title = "TB Comparison")
+
+
+
+
+```
+
+
+```{r}
+M_Rdata = cbind(M_SSB1[1:124,], M_R)
+M_Rdata$ratio = M_Rdata$tsvalue/M_Rdata$tsvalueSSB
+
+ggplot(M_Rdata, aes(x = tsvalueSSB, y = tsvalue)) + 
+  geom_point() +
+  theme_bw() + 
+  labs(x = "Biomass", y = "Recruitment", title = "M Growth Rate")
+
+SB_Rdata = cbind(SB_SSB, SB_R)
+SB_Rdata$ratio = SB_Rdata$tsvalue/SB_Rdata$tsvalueSSB
+
+ggplot(SB_Rdata, aes(x = tsvalueSSB, y = tsvalue)) + 
+  geom_point() +
+  theme_bw() + 
+  labs(x = "Biomass", y = "Recruitment", title = "SB Growth Rate")
+
+```
+```{r}
+print(paste("Maximum Menhaden recruitment/biomass unit =", max(M_Rdata$ratio, na.rm = TRUE)))
+print(paste("Maximum Striped Bass recruitment/biomass unit =", max(SB_Rdata$ratio, na.rm = TRUE)))
+
+print(paste("Average Menhaden recruitment/biomass unit =", mean(M_Rdata$ratio, na.rm = TRUE)))
+print(paste("Average Striped Bass recruitment/biomass unit =", mean(SB_Rdata$ratio, na.rm = TRUE)))
+
+relativeRMax = max(M_Rdata$ratio, na.rm = TRUE)/max(SB_Rdata$ratio, na.rm = TRUE)
+relativeRMean = mean(M_Rdata$ratio, na.rm = TRUE)/mean(SB_Rdata$ratio, na.rm = TRUE)
+
+print(paste("Relative maximum growth rate =", relativeRMax))
+print(paste("Relative mean growth rate =", relativeRMean))
+```
+
