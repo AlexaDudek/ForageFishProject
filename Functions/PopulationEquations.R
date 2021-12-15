@@ -1,4 +1,4 @@
-# Data generation functions
+# Data generation functions file
 
 
 #Parameters
