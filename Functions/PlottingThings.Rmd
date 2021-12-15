@@ -84,9 +84,6 @@ plotTests <- function(dataframe) {
   print(bothPlot)
 }
 
-varySBGrowthRateTest = simulatePopulations_noise(0.4, 0.4, 3.8, 2.5, 1.0, 1.0, 0.1, 0.2, 0.2, 50)
-
-plotTests(varySBGrowthRateTest)
 
 ```
 Below is a function for graphing data from either model. Data must be simulated first with desired model and stored as a variable that can be passed into this plotting function. 
@@ -146,15 +143,32 @@ plotTradeOff(RickerTest)
 ```
 
 ```{r}
-plotTests(ts2)
+
 plotTests(ts3)
 plotTests(ts4)
 plotTests(ts5)
+plotTests(ts6)
+plotTests(ts7)
+plotTests(ts8)
+plotTests(ts9)
+plotTests(ts10)
+plotTests(ts11)
+plotTests(ts12)
+plotTests(ts13)
 ```
+
 ```{r}
 plotTradeOff(to3)
 plotTradeOff(to4)
 plotTradeOff(to5)
+plotTradeOff(to6)
+plotTradeOff(to7)
+plotTradeOff(to8)
+plotTradeOff(to9)
+plotTradeOff(to10)
+plotTradeOff(to11)
+plotTradeOff(to12)
+plotTradeOff(to13)
 
 ```
 
