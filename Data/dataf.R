@@ -15,6 +15,8 @@ c <- 0.1
 
 # simulateRicker_noise <- function(x0, y0, rx, ry, Kx, Ky, cx, cy, fx, fy, numTimeSteps = 50)
 
+
+
 ts5 = simulateRicker_noise(x0 = 0.5, y0 = 0.05, rx = 2.0, ry = (3.5/4.5), Kx = 1, Ky = 0.1, cx = 0.2, cy = 0.2, 0, 0, 50)
 
 ts4 = simulateRicker_noise(x0 = 0.5, y0 = 0.05, rx = 2.0, ry = (3.5/4.5), Kx = 1, Ky = 0.1, cx = 0.1, cy = 0.1, 0, 0, 50)
