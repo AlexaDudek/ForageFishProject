@@ -21,6 +21,11 @@ forageFishRicker_noise <- function(x0, y0, r, K, c, f){
   #population after fishing
   x1f = x1 - (f*x1)
   
+  #if population becomes negative, set it to 0
+  if(x1f < 0){
+    x1f <- 0
+  }
+  
   return(x1f) #returns population next year after fishing
 }
 
@@ -28,7 +33,7 @@ forageFishRicker_noise <- function(x0, y0, r, K, c, f){
 predatorRicker_noise <- function(y0, x0, r, K, c, f){
   
   #population without fishing
-  y1 = ((y0*exp(r*(1-(y0/K)))) + ((c/5.8)*x0*y0))*rlnorm(1, meanlog=0, sdlog=0.005)
+  y1 = ((y0*exp(r*(1-(y0/K)))) + ((c*x0*y0)))*rlnorm(1, meanlog=0, sdlog=0.005)
   #population after fishing
   y1f = y1 - (f*y1)
   
