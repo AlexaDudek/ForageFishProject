@@ -1,0 +1,4 @@
+
+singleSpeciesRicker{
+  
+}
