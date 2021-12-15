@@ -1,0 +1,22 @@
+---
+title: "ForageFishReport"
+author: "Jaydi Swanson"
+date: "12/15/2021"
+output: html_document
+---
+
+Here, add intro stuff!
+
+
+```{r}
+#Loading all files
+
+source("./Data/PopulationEquations.R")
+source("./Data/simulateData.R")
+source("./Data/TradeOffAnalysis.R")
+source("./Data/PlottingThings.Rmd")
+```
+
+First, we needed to create a two-species model, which acts as a proxy for ecosystem based management. This model would demonstrate interactions between the forage fish species and predator species. 
+
+In beginning to refine our model, we created simulations of trade off analysis using the two-species model presented in Perretti et al. (cite). This model is relatively simple, but it does introduce a coupling strength factor between the two species. Through a series of functions,  
