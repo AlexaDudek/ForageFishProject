@@ -11,12 +11,18 @@ Here, add intro stuff!
 ```{r}
 #Loading all files
 
-source("./Data/PopulationEquations.R")
-source("./Data/simulateData.R")
-source("./Data/TradeOffAnalysis.R")
-source("./Data/PlottingThings.Rmd")
+source("./Functions/PopulationEquations.R")
+source("./Functions/simulateData.R")
+source("./Functions/TradeOffAnalysis.R")
+source("./Functions/PlottingThings.Rmd")
 ```
 
 First, we needed to create a two-species model, which acts as a proxy for ecosystem based management. This model would demonstrate interactions between the forage fish species and predator species. 
 
-In beginning to refine our model, we created simulations of trade off analysis using the two-species model presented in Perretti et al. (cite). This model is relatively simple, but it does introduce a coupling strength factor between the two species. Through a series of functions,  
+In beginning to refine our model, we created simulations of trade off analysis using the two-species model presented in Perretti et al. (cite). This model is relatively simple, but it does introduce a coupling strength factor between the two species. Through a series of functions, we simulated time series with varying fishing mortalities on both species. The biomass of each species was averaged and plotted against the fishing efforts to show contours of biomass. 
+
+The functions can be found in Functions/PopulationEquations.R, Functions/simulateData.R, and Functions/TradeOffAnalysis.R. The functions were plotted through a function in Functions/PlottingThings.Rmd.
+```{r}
+
+```
+
