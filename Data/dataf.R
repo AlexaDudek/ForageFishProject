@@ -13,6 +13,11 @@ rx <- 3.8
 ry <- 0.844
 c <- 0.1
 
+# simulateRicker_noise <- function(x0, y0, rx, ry, Kx, Ky, c, fx, fy, numTimeSteps = 50)
+
+
+ts1 <- simulateRicker_noise(x0 = 0.4, y0 = 0.04, ,ry,Kx,Ky,c,0,0,50)
+
 FmxList <- seq(0,0.4,by=0.01)
 FmyList <- seq(0,0.4,by=0.01)
 
@@ -23,4 +28,5 @@ RickerTrade <- generateTradeOff_Ricker(FmxList,FmyList,x0,y0,rx,ry,Kx,Ky,c,50,50
 #fishing = 0 for both
 #one time series
 
-RickerForage_one <- simulateRicker_noise(x0,y0,rx,ry,Kx,Ky,c,0,0,50)
+
+

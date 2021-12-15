@@ -57,7 +57,7 @@ testTradeOff2 <- generateTradeOff_Perretti(FmListX, FmListY, x0 = 0.4, y0 = 0.4,
 
 #Ricker
 
-generateTradeOff_Ricker <- function(FmListX, FmListY, x0, y0, rx, ry, Kx, Ky, c, numTimeSteps = 50, numMeanYears = 20){
+generateTradeOff_Ricker <- function(FmListX, FmListY, x0, y0, rx, ry, Kx, Ky, cx, cy, numTimeSteps = 50, numMeanYears = 20){
   #creating grid for data to be stored in, adding fishing mortalities as columns
   tradeOff = expand.grid(FmX = FmListX, FmY = FmListY)
   #adding columns for biomass data
@@ -74,7 +74,7 @@ generateTradeOff_Ricker <- function(FmListX, FmListY, x0, y0, rx, ry, Kx, Ky, c,
     FmX = tradeOff$FmX[row]
     FmY = tradeOff$FmY[row]
     
-    timeSeries = simulateRicker_noise(x0, y0, rx, ry, Kx, Ky, c, FmX, FmY, numTimeSteps)
+    timeSeries = simulateRicker_noise(x0, y0, rx, ry, Kx, Ky, cx, cy, FmX, FmY, numTimeSteps)
     
     meanX = mean(timeSeries$x[(numTimeSteps - (numMeanYears-1)):numTimeSteps])
     meanY = mean(timeSeries$y[(numTimeSteps - (numMeanYears-1)):numTimeSteps])
