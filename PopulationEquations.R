@@ -24,7 +24,7 @@ forageFishRicker_noise <- function(x0, y0, r, K, c, f){
 
 predatorRicker_noise <- function(y0, x0, r, K, c, f){
   
-  y1 = ((y0*exp(r*(1-(y0/K)))) + (c*x0*y0))*rlnorm(1, meanlog=0, sdlog=0.005)
+  y1 = ((y0*exp(r*(1-(y0/K)))) + ((c/5.8)*x0*y0))*rlnorm(1, meanlog=0, sdlog=0.005)
   
   return(y1-(f*y1)) #returns pop size next year - fishing
 }
@@ -46,7 +46,7 @@ forageFishPerretti <- function(x0, y0, r, K, c){
 # Predator Fish Equation, no process noise
 predatorPerretti <- function(y0, x0, r, K, c){
   
-  y1 = (y0*r*(1-(y0/K))) + (c*x0*y0)
+  y1 = (y0*r*(1-(y0/K))) + ((c/5.8)*x0*y0)
   
   return(y1) #returns pop size next year
 }
@@ -70,7 +70,7 @@ forageFishPerretti_noise <- function(x0, y0, r, K, c, f){
 #Predator Fish Equation, process noise added and fishing mortality 
 predatorPerretti_noise <- function(y0, x0, r, K, c, f){
   
-  y1 = ((y0*r*(1-(y0/K))) + (c*x0*y0))*rlnorm(1, meanlog=0, sdlog=0.005)
+  y1 = ((y0*r*(1-(y0/K))) + ((c/5.8)*x0*y0))*rlnorm(1, meanlog=0, sdlog=0.005)
   
   return(y1-(f*y1)) #returns pop size next year - fishing
 }
