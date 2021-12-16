@@ -1,13 +1,13 @@
-#This file contains a function to generate multiple time series of data. Each simulation has a different
-#fishing mortality, specified by the FmListX and FmListY parameters. It uses the previous
-#simulatePerretti_noise function to create one time series. Data from the end of the time series
-#(default set to last 20 years) is averaged for both species and added to a data frame. This
-#data is then plotted to show a trade-off relationship between the two species. This function is also
-#recreated for the ricker model as well.
+#This file contains functions to generate multiple time series of data. Each simulation has a different
+#fishing mortality, specified by the FmListX and FmListY parameters. These funcions use the previous
+#simulatePerretti_noise  and simulateRicker_noise functions to create one time series. Data from a specified portion 
+#of the time series (default set to last 20 years) is averaged for both species and added to a data frame. Yield
+#is also calculated for each series' averages. This data is later plotted to show a trade-off relationship between 
+#the two species.
 
 
-#FmListX <- a list of fishing mortalities to loop over for the forage fish
-#FmListY <- a list of fishing mortalities to loop over for the predator fish
+#FmListX <- a list of fishing mortality to loop over for the forage fish
+#FmListY <- a list of fishing mortality to loop over for the predator fish
 
 
 #Perretti
@@ -69,16 +69,19 @@ generateTradeOff_Ricker <- function(FmListX, FmListY, x0, y0, rx, ry, Kx, Ky, cx
   
   numRows = nrow(tradeOff)
   
-  #loop to complete a simulation and add its data to the data frame
+  #loop to complete a simulation
   for(row in 1:numRows){
     FmX = tradeOff$FmX[row]
     FmY = tradeOff$FmY[row]
     
     timeSeries = simulateRicker_noise(x0, y0, rx, ry, Kx, Ky, cx, cy, FmX, FmY, numTimeSteps)
     
+    #finding averages of one simulation, for entire time series: enter the same number for 
+    #numTimeSteps and numMeanYears parameters
     meanX = mean(timeSeries$x[(numTimeSteps - (numMeanYears-1)):numTimeSteps])
     meanY = mean(timeSeries$y[(numTimeSteps - (numMeanYears-1)):numTimeSteps])
     
+    #adding data from this simulation to data frame
     tradeOff$xBiomass[row] = meanX
     tradeOff$yBiomass[row] = meanY
     tradeOff$yYield[row] = meanY*FmY

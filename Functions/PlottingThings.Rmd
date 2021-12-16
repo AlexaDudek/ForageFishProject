@@ -58,22 +58,26 @@ print(testTradeOff1Plot)
 ```
 
 ```{r}
-# simulatePopulations_noise <- function(x0, y0, rx, ry, Kx, Ky, c, fx, fy, numTimeSteps = 50)
+# simulateRicker_noise <- function(x0, y0, rx, ry, Kx, Ky, c, fx, fy, numTimeSteps = 50)
 
-
+#Creates plots of population dynamics. Takes data frame of simulated data from simulateRicker_noise or simulatePerretti_noise and plots populations over time, and populations against each other
 plotTests <- function(dataframe) {
+  
+  #produces a graph of forage fish population over time
   forageFishPlot <- ggplot(dataframe, aes(x = time, y = x)) + 
     geom_line() +
     geom_function(fun = function(x) mean(dataframe$x), color = "blue") +
     theme_bw() + 
     labs(x = "Time Step", y = "Population", title = "Forage Fish Population-Simulated Time Series")
   
+  #produces a graph of predator population over time
   predatorPlot <- ggplot(dataframe, aes(x = time, y = y)) + 
     geom_line() +
     geom_function(fun = function(x) mean(dataframe$y), color = "blue") +
     theme_bw() + 
     labs(x = "Time Step", y = "Population", title = "Predator Fish Population-Simulated Time Series")
   
+  #produces a graph of forage fish population vs predator population over time
   bothPlot <- ggplot(dataframe, aes(x = x, y = y)) + 
     geom_line() +
     theme_bw() + 
