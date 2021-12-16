@@ -12,6 +12,70 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(rEDM)
 library(ggplot2)
+```
+
+```{r}
+vignette('rEDM-tutorial')
+```
+
+```{r, eval = FALSE, echo = FALSE}
+# Example from vignette
+ cmap <- CCM(dataFrame = sardine_anchovy_sst, E = 3, Tp = 0, columns = "anchovy", target = "np_sst", libSizes = "10 70 5", sample = 100, showPlot = TRUE)
+
+#dataFrame = data frame you want to use
+# E = embedding dimension
+# Tp??? time to prediction
+# columns = 'dependent variable'
+# target = 'independent variable'
+# libsizes??? size of the library set
+# sample = 100
+# showPlot - do you want a plot or nah
+
+```
+
+
+Ultimately, I want to compare:
+- Predator Biomass and Forage Fish Yield
+- Predator Yield and Forage Fish Yield
+```{r}
+# create data set 
+
+# c = 0.2
+# Fm = 0.5
+CCMdata = simulateRicker_noise(x0 = 0.5, y0 = 0.05, rx = 2.0, ry = (3.5/4.5), Kx = 1, Ky = 0.1, cx = 0.2, cy = 0.2, 0.5, 0.5, 50)
+CCMdata$xYield = CCMdata$x*0.5
+CCMdata$yYield = CCMdata$y*0.5
+```
+
+```{r}
+# Find embedding dimension?
+#EmbedDimension(dataFrame=df_EDM_try,lib="1 50",pred="1 50",columns="tsvalue",target="tsvalue")
+
+## FF = Forage Fish
+## P = Predator
+## Y = Yield 
+## B = Biomass
+
+E_FFYlist = EmbedDimension(dataFrame=CCMdata, lib="1 50", pred="1 50", columns="xYield", target="xYield", showPlot = FALSE)
+E_FFY = E_FFYlist$E[E_FFYlist$rho == max(E_FFYlist$rho)]
+
+E_PYlist = EmbedDimension(dataFrame=CCMdata, lib="1 50", pred="1 50", columns="xYield", target="xYield", showPlot = FALSE)
+E_PY = E_PYlist$E[E_PYlist$rho == max(E_PYlist$rho)]
+
+E_PBlist = EmbedDimension(dataFrame=CCMdata, lib="1 50", pred="1 50", columns="y", target="y", showPlot = FALSE)
+E_PB = E_PBlist$E[E_PBlist$rho == max(E_PBlist$rho)]
+
+# Using E = 3
+```
+
+```{r}
+CCMyield_data = CCM(dataFrame = CCMdata, E = 3, Tp = 0, columns = "yYield", target = "xYield", libSizes = "10 48 5", sample = 100, showPlot = TRUE)
+
+CCMyield = mean(CCMyield_data$`yYield:xYield`)
+
+CCMbiomass_data = CCM(dataFrame = CCMdata, E = 3, Tp = 0, columns = "y", target = "xYield", libSizes = "48 48 1", sample = 100, showPlot = TRUE)
+
+CCMbiomass = mean(CCMbiomass_data$`y:xYield`)
 
 ```
 
