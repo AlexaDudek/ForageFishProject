@@ -6,6 +6,10 @@ output: html_document
 ---
 
 Here, add intro stuff!
+```{r}
+#Load ggplot2
+library(ggplot2)
+```
 
 
 ```{r}
@@ -14,85 +18,124 @@ Here, add intro stuff!
 source("./Functions/PopulationEquations.R")
 source("./Functions/simulateData.R")
 source("./Functions/TradeOffAnalysis.R")
-source("./Functions/PlottingThings.Rmd")
+source("./Functions/Plots.R")
+source("./Data/FinalData.R")
 ```
 
+
 ##Methods
-###Perretti
+
+###Perretti Model
 
 To accomplish the first goal of our project, to show how ecosystem based management is more sustainable than the currently used single species models, we sought to prove that there is a trade off relationship between forage fish species and their predators. Validation for this trade-off supports the idea that species should not be managed without consideration for the species they impact or vice versa. To do this, we first needed to create a two-species model that acts as a proxy for ecosystem based management. This model would demonstrate interactions between the forage fish species and predator species and would show the impacts of forage fish dynamics on predator yields and biomass. 
 
 In beginning to refine our model, we created simulations of trade off analysis using the two-species model presented in Perretti et al. (cite). This model is relatively simple, but it does introduce a coupling strength factor between the two species. Through a series of functions, we simulated multiple time series with varying fishing mortality on both species. Predator and prey biomass and yields  waere averaged for each time series and plotted against the corresponding fishing effort to show contours of biomass. Our initial parameters were taken from the supplemental information from Perretti et al., though we adjusted the carrying capacities based off of the common rule of 10% energy transfer and biomass size up a trophic level, keeping the striped bass carrying capacity at only 10% of the menhaden's.
 
-The functions can be found in Functions/PopulationEquations.R, Functions/simulateData.R, and Functions/TradeOffAnalysis.R. The functions were plotted through a function in Functions/PlottingThings.Rmd. Parameters for this data set can be found in Data/dataf.R
+#The functions can be found in Functions/PopulationEquations.R, Functions/simulateData.R, and Functions/TradeOffAnalysis.R. The functions were plotted through a function in Functions/PlottingThings.Rmd. Parameters for this data set can be found in Data/dataf.R
 ```{r}
 #plots of Perretti model data
 plotTradeOff(Perretti_sim)
 ```
-In the first graph, "Trade Off Contour Analysis-Predator Biomass", total predator biomass is plotted against both predator and forage fish fishing mortality. The contours do not change with forage fish fishing mortality, which suggests that there is no relationship between forage fish fishing dynamics and predator biomass. 
+In the first graph, "Trade Off Contour Analysis-Predator Biomass", total predator biomass is plotted against both predator and forage fish fishing mortality. According to this model, the contours do not change with forage fish fishing mortality until unrealistically high fishing mortality is reached, which suggests that there is no relationship between forage fish fishing dynamics and predator biomass at real world fishing efforts. 
 
-The following two graphs demonstrate predator yield and forage fish yield with changing fishing dynamics, and they show similar results as the yields only change with the specified species fishing mortality. 
+The following two graphs demonstrate predator yield and forage fish yield with changing fishing dynamics, and they show similar results as the yields only change with the specified species fishing mortality at realistic fishing levels. 
 
-A limitation with this two-species model is the chance for populations to become negative. The Perretti model determines population size before coupling and fishing effects with the following equation, where x0 is the initial population size, r is intrinsic growth rate, and K is carrying capacity: $ x^2 $
+A limitation with the Perretti et al. two-species model is the chance for populations to become negative. The Perretti model determines population size before coupling and fishing effects with the following equation, where x0 is the initial population size, r is intrinsic growth rate, and K is carrying capacity: $ x^2 $
 
-
+#Full models can be found in ./Functions/PopulationEquations.R
 $$
-x1 = x0*r*(1-(x0/K)) #Full models can be found in ./Functions/PopulationEquations.R
+x1 = x0*r*(1-(x0/K)) 
 $$
-If K is less than x0, the population becomes negative. Because this is not possible in the real world, we chose to abandon the Perretti model and search for a more realistic one. 
+If K is less than x0, the population becomes negative. Because this is not possible in the real world, we chose to abandon the Perretti model and search for a more realistic one. The trade-off relationship is very weakly demonstrated in this approach, so with a better two-species model, we can demonstrate a stronger trade-off relationship.
+
+###Ricker Model
 
 Our search for a more accurate model led us to the Ricker single-species model, which we adapted for a two-species approach by adding the same coupling factor presented in Perretti et al..
 
 ```{r}
-#add in Ricker models #Models can be found in ./Functions/PopulationEquations.R
+#Models can be found in ./Functions/PopulationEquations.R
+
+forageFishRicker_noise <- function(x0, y0, r, K, c, f){
+  
+  #population without fishing
+  x1 = ((x0*exp(r*(1-(x0/K)))) - (c*x0*y0))*rlnorm(1, meanlog=0, sdlog=0.005)
+  #population after fishing
+  x1f = x1 - (f*x1)
+  
+  return(x1f) #returns population next year after fishing
+}
+
+
+predatorRicker_noise <- function(y0, x0, r, K, c, f){
+  
+  #population without fishing
+  y1 = ((y0*exp(r*(1-(y0/K)))) + ((c*x0*y0)))*rlnorm(1, meanlog=0, sdlog=0.005)
+  #population after fishing
+  y1f = y1 - (f*y1)
+  
+  return(y1f) #returns population next year after fishing
+}
 ```
 
-To test this model and see if it worked correctly for our chosen species, Atlantic menhaden and striped bass, we searched for starting parameters in the literature. #add more about what we chose and how
+To test this model and see if it worked correctly for our chosen species, Atlantic menhaden and striped bass, we searched for starting parameters in the literature. Though we were able to determine information on the relationship between growth rates and a relative coupling factor based on the proportion of striped bass diet made up of menhaden, these parameters did not produce realistic data with our model. 
+
+Final parameters for the Ricker two-species model were chosen arbitrarily to optimize the output of our model. The 10% energy transfer rule was maintained by keeping the striped bass carrying capacity and initial population size at 10% of the Atlantic menhaden population's parameters. The striped bass growth rate was also kept at less than half of the menhaden growth rate to simulate realistic growth. All coupling values produced a trade-off relationship, leading us to set c to 0.2 in an attempt to remain close to the value presented in Perretti et al., though we will compare higher and lower coupling strengths. 
 
 The following parameters were used for the Ricker two species approach:
 ```{r include = FALSE}
-x0 <- #Initial forage fish population size
+x0 <- 0.5 #Initial forage fish population size
   
-y0 <- #Initial predator population size
+y0 <- 0.05 #Initial predator population size
   
-rx <- #Forage fish intrinsic growth rate
+rx <- 2.0 #Forage fish intrinsic growth rate
   
-ry <- #Predator intrinsic growth rate
+ry <- 0.78 #Predator intrinsic growth rate
   
-Kx <- #Forage fish carrying capacity
+Kx <- 1.0 #Forage fish carrying capacity
   
-Ky <- #Predator carrying capacity
+Ky <- 0.1 #Predator carrying capacity
   
-cx <- #Forage fish coupling strength
+cx <- 0.2 #Forage fish coupling strength
   
-cy <- #Predator coupling strength
-```
+cy <- 0.2 #Predator coupling strength
 
-The coupling strength parameters, cx and cy, introduce a dependency in the two species that transforms the single-species Ricker model into a two-species model. 
+numTimeSteps <- 50 #100 time steps in each simulation 
+
+numMeanYears <- 50 #averaging the last 50 years of each
+```
 
 After determining our parameters, we produced the same graphs as shown above in the Perretti methods, this time using our generateTradeOff_Ricker function (./Functions/TradeOffAnalysis.R). This function takes an input of the parameters listed above along with vectors of fishing mortality to loop over and a number of times for the simulation to be ran. Time series at each fishing mortality pair are created inside the loop using a function called simulateRicker_noise (./Functions/simulateData.R), which outputs a data frame containing a single time series of predator and forage fish population sizes over time at constant fishing mortality. Then, biomass is averaged across the time series for both species and inputted into a new data frame in generateTradeOff_Ricker. Yields are also calculated for each series. The final output is a data frame with fishing mortality pairs, predator biomass and yield, and forage fish biomass and yield for a number of simulations. 
 
 For the following analysis, we used a single data set from the above parameters with fishing mortality from 0.0 to 1.0 and ### simulations. 
 
 ```{r}
-#data set variable
+#Variable Ricker2_02 is a data frame with data for a Ricker two-species model simulation with the above parameters
+head(Ricker2_02) 
 ```
 
 Once the data is simulated, we first plot the population dynamics to ensure the model is producing reasonable data. 
 
 ```{r}
-#plotTests() to see pop dynamics #./Functions/PlottingThings.Rmd
+#Dynamics with no fishing mortality (fx = 0, fy = 0)
+plotTests(Ricker2_02_1_nofish) #./Functions/PlottingThings.Rmd
+```
+
+```{r}
+#Dynamics with fishing mortality (fx = 0.5, fy = 0.3)
+plotTests(Ricker2_02_1_fish) #./Functions/PlottingThings.Rmd
 ```
 
 Add description of our specific plots and analysis of the dynamics
 
 After verifying that our populations are fluctuation realistically with the chosen parameters, we plotted the trade-off relationships of biomass and yield.
 ```{r}
-#graphs WITHOUT MSY LINES #plotTradeOff() #./Functions/PlottingThings.Rmd
+#saving plots in variable
+Ricker2_plots <- plotTradeOff(Ricker2_02) #./Functions/PlottingThings.Rmd
+Ricker2_plots
 ```
 Description of findings
 
-To compare our two-species (ecosystem based) model to a single species model, we simulated one time series of predator and forage fish biomass with a single species Ricker model using the following parameters. Fishing mortality was set to 
+To compare our two-species (ecosystem based) model to a single species model, we simulated one time series of predator and forage fish biomass with a single species Ricker model using the following parameters. Fishing mortality and coupling are not added
 ```{r include = FALSE}
 x0 <- #Initial forage fish population size
   
@@ -106,9 +149,6 @@ Kx <- #Forage fish carrying capacity
   
 Ky <- #Predator carrying capacity
   
-cx <- #Forage fish coupling strength
-  
-cy <- #Predator coupling strength
 ```
 
 A single-species model does not account for dependency on other species or the ecosystem, so it often overestimates a maximum sustainable yield. When compared to two-species modeled data, single-species MSYs fall in regions that actually obtain lower yields and will cause decreases in biomass of both species. To demonstrate this, we overlaid our calculated single-species fishing mortality at MSY for both species on our two-species trade off graphs. This way, a visual representation of the discrepancies between the models is created. 

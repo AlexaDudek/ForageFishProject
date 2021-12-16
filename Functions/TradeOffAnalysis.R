@@ -1,5 +1,5 @@
 #This file contains functions to generate multiple time series of data. Each simulation has a different
-#fishing mortality, specified by the FmListX and FmListY parameters. These funcions use the previous
+#fishing mortality, specified by the FmListX and FmListY parameters. These functions use the previous
 #simulatePerretti_noise  and simulateRicker_noise functions to create one time series. Data from a specified portion 
 #of the time series (default set to last 20 years) is averaged for both species and added to a data frame. Yield
 #is also calculated for each series' averages. This data is later plotted to show a trade-off relationship between 
