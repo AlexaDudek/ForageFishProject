@@ -63,7 +63,6 @@ simulateRicker_noise <- function(x0, y0, rx, ry, Kx, Ky, cx, cy, fx, fy, numTime
   
   #creating data frame to store in
   populations =  data.frame(time = 1:numTimeSteps, x = numeric(numTimeSteps), y = numeric(numTimeSteps))
-  #looping over one time step model to create time series
   for(i in 1:numTimeSteps){
     populations$x[i] = forageFishRicker_noise(x0, y0, rx, Kx, cx, fx)
     populations$y[i] = predatorRicker_noise(y0, x0, ry, Ky, cy, fy)
