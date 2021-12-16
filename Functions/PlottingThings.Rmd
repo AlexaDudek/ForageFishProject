@@ -177,7 +177,7 @@ plotTradeOff(to13)
 plot1 <- ggplot(toMSYTest, aes(x = FmX, y = FmY, z = xYield)) +
     geom_contour_filled() + geom_contour(color="grey")+
     geom_contour(color="black",breaks=0.58)+
-    labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = "Trade Off Contour Analysis-Predator Biomass")
+    labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = "Forage Fish")
   print(plot1)
 
 
@@ -204,6 +204,34 @@ plot4 <- ggplot(toMSYTest4, aes(x = FmX, y = FmY, z = yYield)) +
     geom_contour(color="black", breaks=0.58)+
     labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = "Trade Off Contour Analysis-Predator Biomass")
   print(plot4)
+  
+plot5 <- ggplot(toMSYTest5, aes(x = FmX, y = FmY, z = yYield)) +
+    geom_contour_filled() + geom_contour(color="grey")+
+    geom_contour(color="black", breaks=0.58)+
+    labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = "Trade Off Contour Analysis-Predator Biomass")
+  print(plot5)
 
+```
+
+```{r Finding SB MSY}
+
+SBmsyPlot <- ggplot(toMSYTest6, aes(x = FmX, y = FmY, z = yYield)) +
+    geom_contour_filled() + geom_contour(color="grey")+
+    geom_contour(color="black", breaks=0.58)+
+    labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = "Trade Off Contour Analysis-Predator Biomass")
+  print(SBmsyPlot)
+  
+  
+MmsyPlot <- ggplot(toMSYTest7, aes(x = FmX, y = FmY, z = xYield)) +
+    geom_contour_filled() + geom_contour(color="grey")+
+    geom_contour(color="black", breaks=0.58)+
+    labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = "Trade Off Contour Analysis-Predator Biomass")
+  print(MmsyPlot)
+  
+MmsyPlot2 <- ggplot(toFineMSYM, aes(x = FmX, y = FmY, z = xYield)) +
+    geom_contour_filled() + geom_contour(color="grey")+
+    geom_contour(color="black", breaks=0.58)+
+    labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = "Trade Off Contour Analysis-Predator Biomass")
+  print(MmsyPlot2)
 ```
 
