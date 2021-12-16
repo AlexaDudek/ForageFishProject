@@ -54,7 +54,7 @@ testPopulations1 = simulatePerretti(x0, y0, rx, ry, Kx, Ky, c, 50)
 
 simulateRicker_noise <- function(x0, y0, rx, ry, Kx, Ky, cx, cy, fx, fy, numTimeSteps = 50){
   populations =  data.frame(time = 1:numTimeSteps, x = numeric(numTimeSteps), y = numeric(numTimeSteps))
-  for(i in 1:50){
+  for(i in 1:numTimeSteps){
     populations$x[i] = forageFishRicker_noise(x0, y0, rx, Kx, cx, fx)
     populations$y[i] = predatorRicker_noise(y0, x0, ry, Ky, cy, fy)
     
