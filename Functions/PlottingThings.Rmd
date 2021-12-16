@@ -172,4 +172,38 @@ plotTradeOff(to13)
 
 ```
 
+```{r}
+
+plot1 <- ggplot(toMSYTest, aes(x = FmX, y = FmY, z = xYield)) +
+    geom_contour_filled() + geom_contour(color="grey")+
+    geom_contour(color="black",breaks=0.58)+
+    labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = "Trade Off Contour Analysis-Predator Biomass")
+  print(plot1)
+
+
+plot <- ggplot(toMSYTest, aes(x = FmX, y = FmY, z = yYield)) +
+    geom_contour_filled() + geom_contour(color="grey")+
+    geom_contour(color="black",breaks=0.58)+
+    labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = "Trade Off Contour Analysis-Predator Biomass")
+  print(plot)
+  
+plot2 <- ggplot(toMSYTest2, aes(x = FmX, y = FmY, z = yYield)) +
+    geom_contour_filled() + geom_contour(color="grey")+
+    geom_contour(color="black",breaks=0.58)+
+    labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = "Trade Off Contour Analysis-Predator Biomass")
+  print(plot2)
+  
+plot3 <- ggplot(toMSYTest3, aes(x = FmX, y = FmY, z = yYield)) +
+    geom_contour_filled() + geom_contour(color="grey")+
+    geom_contour(color="black",breaks=0.58)+
+    labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = "Trade Off Contour Analysis-Predator Biomass")
+  print(plot3)
+  
+plot4 <- ggplot(toMSYTest4, aes(x = FmX, y = FmY, z = yYield)) +
+    geom_contour_filled() + geom_contour(color="grey")+
+    geom_contour(color="black", breaks=0.58)+
+    labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = "Trade Off Contour Analysis-Predator Biomass")
+  print(plot4)
+
+```
 
