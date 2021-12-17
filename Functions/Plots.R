@@ -1,4 +1,6 @@
 #Creates plots of population dynamics. Takes data frame of simulated data from simulateRicker_noise or simulatePerretti_noise and plots populations over time, and populations against each other
+library(ggplot2)
+
 plotTests <- function(dataframe) {
   
   #produces a graph of forage fish population over time

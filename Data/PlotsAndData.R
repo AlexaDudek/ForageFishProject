@@ -1,4 +1,6 @@
 # File with all of data, functions, and calls for creating Figures
+library(rEDM)
+
 set.seed(8)
 # Perretti parameters
 x0_perretti = 0.4
@@ -206,7 +208,7 @@ tsRicker_nl_plots = plotTests(tsRicker_nl_data)
 
 # Trade Off with Chaotic Data
 to_nl = generateTradeOff_Ricker_nl(FmList, FmList, x0_nl, y0_nl, rx_nl, ry_nl, Kx_nl, Ky_nl, 
-                                       cx_nl, cy_nl, numTimeSteps_nl, numMeanYears = 400)
+                                       cx_nl, cy_nl, 200, numMeanYears = 100)
 
 to_nl_plot <-  ggplot(to_nl, aes(x = FmX, y = FmY, z = yYield)) +
   geom_contour_filled() + 
@@ -245,6 +247,7 @@ ggplot(data = cVSccm, aes(x = c, y = predictability)) +
   geom_point(size = 2) +
   geom_smooth(data =cVSccm_no0, aes(x = c, y = predictability), method="lm", formula = y~log(x), fill="blue", fullrange=TRUE) +
   theme_bw() + 
+  theme(plot.title = element_text(face="bold")) +
   labs(x = "Coupling Factor", y = "Predictability", 
        title = "Linear Model Coupling Factor vs \n Non-Parametric Convergent Cross Mapping Predictability")
   
