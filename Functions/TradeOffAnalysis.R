@@ -90,5 +90,41 @@ generateTradeOff_Ricker <- function(FmListX, FmListY, x0, y0, rx, ry, Kx, Ky, cx
   return(tradeOff) #returning data frame with data from all simulations
 }
 
+generateTradeOff_Ricker_nl <- function(FmListX, FmListY, x0, y0, rx, ry, Kx, Ky, cx, cy, numTimeSteps = 50, numMeanYears = 20){
+  #creating grid for data to be stored in, adding fishing mortalities as columns
+  tradeOff = expand.grid(FmX = FmListX, FmY = FmListY)
+  #adding columns for biomass data
+  tradeOff$xBiomass = NA
+  tradeOff$yBiomass = NA
+  #adding columns for yield data
+  tradeOff$yYield = NA
+  tradeOff$xYield = NA
+  
+  numRows = nrow(tradeOff)
+  
+  #loop to complete a simulation
+  for(row in 1:numRows){
+    FmX = tradeOff$FmX[row]
+    FmY = tradeOff$FmY[row]
+    
+    timeSeries = simulateRicker_noise_nl(x0, y0, rx, ry, Kx, Ky, cx, cy, FmX, FmY, numTimeSteps)
+    
+    #finding averages of one simulation, for entire time series: enter the same number for 
+    #numTimeSteps and numMeanYears parameters
+    meanX = mean(timeSeries$x[(numTimeSteps - (numMeanYears-1)):numTimeSteps])
+    meanY = mean(timeSeries$y[(numTimeSteps - (numMeanYears-1)):numTimeSteps])
+    meanXyield = mean(timeSeries$xYield[(numTimeSteps - (numMeanYears-1)):numTimeSteps])
+    meanYyield = mean(timeSeries$yYield[(numTimeSteps - (numMeanYears-1)):numTimeSteps])
+    
+    
+    #adding data from this simulation to data frame
+    tradeOff$xBiomass[row] = meanX
+    tradeOff$yBiomass[row] = meanY
+    tradeOff$yYield[row] = meanYyield
+    tradeOff$xYield[row] = meanXyield
+  }
+  return(tradeOff) #returning data frame with data from all simulations
+}
+
 
 
