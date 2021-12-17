@@ -80,5 +80,3 @@ simulateRicker_noise <- function(x0, y0, rx, ry, Kx, Ky, cx, cy, fx, fy, numTime
 
 
 
-
-

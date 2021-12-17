@@ -81,4 +81,3 @@ predatorRicker_noise <- function(y0, x0, r, K, c, f){
   return(y1f) #returns population next year after fishing
 }
 
-#Ricker non-linear models
