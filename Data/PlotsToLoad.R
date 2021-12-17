@@ -179,3 +179,21 @@ to_highC_PYield <- ggplot(toRicker_highC_data, aes(x = FmX, y = FmY, z = yYield)
   geom_vline(xintercept = FF_2Smsy, linetype = "dashed", color = "red") +
   labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", 
        title = paste("Trade Off Contour Analysis - Predator Yield, c =", cx_high))
+
+# Nonlinear CCM Parameters
+x0_nl = 1
+y0_nl = 0.05
+rx_nl = 3
+ry_nl = 3
+Kx_nl = 1
+Ky_nl = 0.1
+cx_nl = 0.01
+cy_nl = 0.2
+fx_nl = 0.1
+fy_nl = 0.1
+numTimeSteps_nl = 500
+# Ricker time series without fishing
+tsRicker_nl_data = simulateRicker_noise_nl(x0_nl, y0_nl, rx_nl, ry_nl, Kx_nl, Ky_nl, 
+                                           cx_nl, cy_nl, fx_nl, fy_nl, 
+                                           numTimeSteps_nl)
+tsRicker_nl_plots = plotTests(tsRicker_nl_data)
