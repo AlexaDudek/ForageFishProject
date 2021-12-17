@@ -181,6 +181,8 @@ Specifically, machine learning can be used to detect causal relationships betwee
 
 ##EMPIRICAL DYNAMIC MODELING METHODS##
 
+To accomplish this, we used the rEDM R package to perform convergent cross-mapping. For a given pair of time series, this method assesses the causal relationship between them. A negative output indicates no relationship, while increasing positive outputs mean increasing causal relationship between one variable and another. We generated time series of predator and prey biomass and yield using our two-species Ricker model over a range of coupling factors from 0 to 1. We then tested whether or not the machine-learning algorithm could detect increasing causality between foraging fish yield acting on predator yield based on increasing coupling factor. Below is the plot of coupling factor compared with the convergent cross-mapping predictability output of forage fish yield on predator yield.
+
 ```{r}
 ggplot(data = cVSccm, aes(x = c, y = predictability)) +
   geom_point(size = 2) +
@@ -188,7 +190,10 @@ ggplot(data = cVSccm, aes(x = c, y = predictability)) +
   theme_bw() + 
   theme(plot.title = element_text(face="bold")) +
   labs(x = "Coupling Factor", y = "Predictability", 
-       title = "Linear Model Coupling Factor vs \n Non-Parametric Convergent Cross Mapping Predictability")
+       title = "Linear Model Coupling Factor vs \n Non-Parametric Convergent Cross Mapping Predictability of Predator Yield based on Forage Fish Yield")
   
 ```
+
+
+As is observed on the above plot, the convergent cross mapping output increases with increasing coupling factor, beginning to plateau once the coupling factor is around 0.5. This indicates that when forage fish and predators are more interdependent, the machine-learning algorithm detects a stronger causal relationship between them. Our parametric trade off analyses also demonstrated stronger trade off effects at higher coupling values. This shows that machine-learning analyses are able to detect species interdependence and trade off based on catch data.
 

@@ -166,7 +166,7 @@ to_highC_PBiomass <- ggplot(toRicker_highC_data, aes(x = FmX, y = FmY, z = yBiom
   geom_vline(xintercept = FF_SSmsy, color = "red") +
   geom_vline(xintercept = FF_2Smsy, linetype = "dashed", color = "red") +
   labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", 
-       title = paste("Trade Off Contour Analysis - Predator Yield, c =", cx_high))
+       title = paste("Trade Off Contour Analysis - Predator Biomass, c =", cx_high))
 
 to_highC_PYield <- ggplot(toRicker_highC_data, aes(x = FmX, y = FmY, z = yYield)) +
   geom_contour_filled(breaks = PYbreaks, show.legend = TRUE) +
