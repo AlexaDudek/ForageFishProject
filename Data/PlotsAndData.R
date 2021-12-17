@@ -10,6 +10,13 @@ Ky_perretti = 1
 c_perretti = 0.1
 
 
+#Fishing mortality lists for all sims
+FmxList <- seq(0.0,1.0,by=0.1)
+FmyList <- seq(0.0,1.0,by=0.1)
+
+#Perretti two species model data
+Perretti_sim <- generateTradeOff_Perretti(FmxList,FmyList,0.4,0.04,3.8,0.844,1,0.1,0.1)
+
 # Trade Off Parameters 
 x0 = 0.5
 y0 = 0.05
