@@ -1,0 +1,271 @@
+---
+title: "PlottingThings"
+author: "Alexa Dudek"
+date: "12/13/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Loading ggplot
+```{r Libraries}
+library(ggplot2)
+```
+
+Graphs of data simulated by Perretti models. Graphs shown are of forage fish over time, predator over time, and trade off over time. 
+```{r Initial Perretti Model Test Plots}
+
+# get mean from last 20 time steps
+meanX20 = mean(testPopulations1$x[30:50])
+meanY20 = mean(testPopulations1$y[30:50])
+
+ggplot(testPopulations1, aes(x = time, y = x)) + 
+  geom_line() +
+  geom_function(fun = function(x) meanX20, color = "blue") +
+  theme_bw() + 
+  labs(x = "Time Step", y = "Population", title = "Forage Fish Simulated Time Series")
+
+ggplot(testPopulations1, aes(x = time, y = y)) + 
+  geom_line() +
+  geom_function(fun = function(x) meanY20, color = "blue") +
+  theme_bw() + 
+  labs(x = "Time Step", y = "Population", title = "Predator Fish Simulated Time Series")
+
+ggplot(testPopulations1, aes(x = x, y = y)) + 
+  geom_line() +
+  theme_bw() + 
+  labs(x = "Forage Fish", y = "Predator", title = "Tradeoff?")
+
+```
+
+This graph was our initial attempt at plotting the contours. Biomass is represented as an average of the last 20 years of each simulation. Growth rates are 3.8 for forage fish and 3.7 for predator. 
+```{r Trade Off Analysis Test 1 Plot}
+#saving for reference, not really using this anymore
+
+testTradeOff1Plot <- ggplot(testTradeOff1, aes(x = FmX, y = FmY, z = yBiomass)) +
+  geom_contour_filled() +
+  labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = "Trade Off Contour Analysis")
+
+testTradeOff2Plot <- ggplot(testTradeOff2, aes(x = FmX, y = FmY, z = yBiomass)) +
+  geom_contour_filled() +
+  labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = "Trade Off Contour Analysis on 200 years")
+
+print(testTradeOff2Plot)
+
+print(testTradeOff1Plot)
+```
+
+```{r}
+# simulateRicker_noise <- function(x0, y0, rx, ry, Kx, Ky, c, fx, fy, numTimeSteps = 50)
+
+#Creates plots of population dynamics. Takes data frame of simulated data from simulateRicker_noise or simulatePerretti_noise and plots populations over time, and populations against each other
+plotTests <- function(dataframe) {
+  
+  #produces a graph of forage fish population over time
+  forageFish <- ggplot(dataframe, aes(x = time, y = x)) + 
+    geom_line() +
+    geom_function(fun = function(x) mean(dataframe$x), color = "blue") +
+    theme_bw() + 
+    labs(x = "Time Step", y = "Population", title = "Forage Fish - Simulated Time Series")
+  
+  #produces a graph of predator population over time
+  predator <- ggplot(dataframe, aes(x = time, y = y)) + 
+    geom_line() +
+    geom_function(fun = function(x) mean(dataframe$y), color = "blue") +
+    theme_bw() + 
+    labs(x = "Time Step", y = "Population", title = "Predator - Simulated Time Series")
+  
+  #produces a graph of forage fish population vs predator population over time
+  both <- ggplot(dataframe, aes(x = x, y = y)) + 
+    geom_line() +
+    theme_bw() + 
+    labs(x = "Forage Fish", y = "Predator", title = "Trade-Off-Relationship Between Forage Fish and Predator Populations")
+  
+  print(forageFish)
+  print(predator)
+  print(both)
+  
+  return(list(FF = forageFish, P = predator, B = both))
+}
+
+
+```
+Below is a function for graphing data from either model. Data must be simulated first with desired model and stored as a variable that can be passed into this plotting function. 
+```{r Plot Trade Off Tests}
+
+#plotTradeOff - takes a data frame as an input (data frame contains fishing mortalities of both forage fish and predator, biomass of forage fish and predator, and yield of forage fish and predator). The function returns three graphs: one showing contours of predator biomass, one showing contours of predator yield, and one showing contours of forage fish yield. 
+
+FFcolors = colorRampPalette(c("white", "purple"))
+
+
+plotTradeOff <- function(dataframe, c, P_SSmsy, P_2Smsy, FF_SSmsy, FF_2Smsy){
+  plot <- ggplot(dataframe, aes(x = FmX, y = FmY, z = yBiomass)) +
+    geom_contour_filled() + 
+    geom_contour(color="grey")+
+    geom_hline(yintercept = P_SSmsy, color = "red") +
+    geom_hline(yintercept = P_2Smsy, linetype = "dashed", color = "red") +
+    geom_vline(xintercept = FF_SSmsy, color = "red") +
+    geom_vline(xintercept = FF_2Smsy, linetype = "dashed", color = "red") +
+    labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = paste("Trade Off Contour Analysis - Predator Biomass; c =", c))
+  
+  plot2 <- ggplot(dataframe, aes(x = FmX, y = FmY, z = yYield)) +
+    geom_contour_filled() + 
+    geom_contour(color="grey")+
+    geom_hline(yintercept = P_SSmsy, color = "red") +
+    geom_hline(yintercept = P_2Smsy, linetype = "dashed", color = "red") +
+    geom_vline(xintercept = FF_SSmsy, color = "red") +
+    geom_vline(xintercept = FF_2Smsy, linetype = "dashed", color = "red") +
+    labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = paste("Trade Off Contour Analysis - Predator Yield; c =", c))
+  
+  plot3 <- ggplot(dataframe, aes(x = FmX, y = FmY, z = xYield)) +
+    geom_contour_filled() + 
+    geom_contour(color="grey")+
+    geom_hline(yintercept = P_SSmsy, color = "red") +
+    geom_hline(yintercept = P_2Smsy, linetype = "dashed", color = "red") +
+    geom_vline(xintercept = FF_SSmsy, color = "red") +
+    geom_vline(xintercept = FF_2Smsy, linetype = "dashed", color = "red") +
+    labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = paste("Trade Off Contour Analysis - Forage Fish Yield; c =", c))
+  
+  return(list(pBiomass = plot, pYield = plot2, ffYield = plot3))
+}
+
+```
+
+
+Next, we test the plotting by creating a data frame, varySBGrowthRateTO, and passing it into the plotting function. This data uses the Perretti model.
+```{r}
+# generateTradeOff_Perretti <- function(FmListX, FmListY, x0, y0, rx, ry, Kx, Ky, c, numTimeSteps = 50, numMeanYears = 20)
+
+FmListX = seq(0, 0.4, by = 0.01) 
+FmListY = seq(0, 0.4, by = 0.01)
+
+#creating data--50 years, averaging all 50 years for biomass
+varySBGrowthRateTO <- generateTradeOff_Perretti(FmListX, FmListY, 0.4, 0.4, 3.8, 2.5, 1.0, 1.0, 0.1, 50, 50)
+#plotting data
+plotTradeOff(varySBGrowthRateTO)
+```
+
+
+Now we plot data using the Ricker model. 
+```{r}
+#generateTradeOff_Ricker <- function(FmListX, FmListY, x0, y0, rx, ry, Kx, Ky, c, numTimeSteps = 50, numMeanYears = 20)
+
+FmListX = seq(0, 0.4, by = 0.01) 
+FmListY = seq(0, 0.4, by = 0.01)
+
+#creating data--50 years, averaging all 50 years for biomass
+RickerTest <- generateTradeOff_Ricker(FmListX, FmListY, 0.4, 0.4, 3.8, 2.5, 1.0, 1.0, 0, 200, 200)
+#plotting data
+plotTradeOff(RickerTest)
+
+```
+
+```{r}
+
+plotTests(ts3)
+plotTests(ts4)
+plotTests(ts5)
+plotTests(ts6)
+plotTests(ts7)
+plotTests(ts8)
+plotTests(ts9)
+plotTests(ts10)
+plotTests(ts11)
+plotTests(ts12)
+plotTests(ts13)
+```
+
+```{r}
+plotTradeOff(to3)
+plotTradeOff(to4)
+plotTradeOff(to5)
+plotTradeOff(to6)
+plotTradeOff(to7)
+plotTradeOff(to8)
+plotTradeOff(to9)
+plotTradeOff(to10)
+plotTradeOff(to11)
+plotTradeOff(to12)
+plotTradeOff(to13)
+
+```
+
+```{r}
+
+plot1 <- ggplot(toMSYTest, aes(x = FmX, y = FmY, z = xYield)) +
+    geom_contour_filled() + geom_contour(color="grey")+
+    geom_contour(color="black",breaks=0.58)+
+    labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = "Forage Fish")
+
+
+plot <- ggplot(toMSYTest, aes(x = FmX, y = FmY, z = yYield)) +
+    geom_contour_filled() + geom_contour(color="grey")+
+    geom_contour(color="black",breaks=0.58)+
+    labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = "Trade Off Contour Analysis-Predator Biomass")
+  
+plot2 <- ggplot(toMSYTest2, aes(x = FmX, y = FmY, z = yYield)) +
+    geom_contour_filled() + geom_contour(color="grey")+
+    geom_contour(color="black",breaks=0.58)+
+    labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = "Trade Off Contour Analysis-Predator Biomass")
+  print(plot2)
+  
+plot3 <- ggplot(toMSYTest3, aes(x = FmX, y = FmY, z = yYield)) +
+    geom_contour_filled() + geom_contour(color="grey")+
+    geom_contour(color="black",breaks=0.58)+
+    labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = "Trade Off Contour Analysis-Predator Biomass")
+  print(plot3)
+  
+plot4 <- ggplot(toMSYTest4, aes(x = FmX, y = FmY, z = yYield)) +
+    geom_contour_filled() + geom_contour(color="grey")+
+    geom_contour(color="black", breaks=0.58)+
+    labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = "Trade Off Contour Analysis-Predator Biomass")
+  print(plot4)
+  
+plot5 <- ggplot(toMSYTest5, aes(x = FmX, y = FmY, z = yYield)) +
+    geom_contour_filled() + geom_contour(color="grey")+
+    geom_contour(color="black", breaks=0.58)+
+    labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = "Trade Off Contour Analysis-Predator Biomass")
+  print(plot5)
+
+```
+
+```{r Finding SB MSY}
+
+SBmsyPlot <- ggplot(toMSYTest6, aes(x = FmX, y = FmY, z = yYield)) +
+    geom_contour_filled() + geom_contour(color="grey")+
+    geom_contour(color="black", breaks=0.58)+
+    labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = "Trade Off Contour Analysis-Predator Biomass")
+  print(SBmsyPlot)
+  
+  
+MmsyPlot <- ggplot(toMSYTest7, aes(x = FmX, y = FmY, z = xYield)) +
+    geom_contour_filled() + geom_contour(color="grey")+
+    geom_contour(color="black", breaks=0.58)+
+    labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = "Trade Off Contour Analysis-Predator Biomass")
+  print(MmsyPlot)
+  
+MmsyPlot2 <- ggplot(toFineMSYM, aes(x = FmX, y = FmY, z = xYield)) +
+    geom_contour_filled() + geom_contour(color="grey")+
+    geom_contour(color="black", breaks=0.58)+
+    labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = "Trade Off Contour Analysis-Predator Biomass")
+  print(MmsyPlot2)
+```
+```{r}
+SBmsyPlot_highC <- ggplot(toMSY_SB_highC1, aes(x = FmX, y = FmY, z = yYield)) +
+    geom_contour_filled() + geom_contour(color="grey")+
+    geom_contour(color="black", breaks=0.58)+
+    labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", title = "Trade Off Contour Analysis-Predator Biomass")
+  print(SBmsyPlot_highC)
+  
+toRicker_lowC_plots[1]
+toRicker_lowC_plots[2]
+toRicker_lowC_plots[3]
+toRicker_highC_plots[1]
+toRicker_highC_plots[2]
+toRicker_highC_plots[3]
+
+```
+
+
