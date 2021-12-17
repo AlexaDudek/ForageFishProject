@@ -78,7 +78,8 @@ CCMbiomass_data = CCM(dataFrame = CCMdata, E = 3, Tp = 0, columns = "y", target 
 CCMbiomass = mean(CCMbiomass_data$`y:xYield`)
 
 ```
-```{r}
+
+```{r, error = TRUE}
 ggplot(toRicker_lowC_data, aes(x = FmX, y = FmY, z = xYield)) +
   geom_contour_filled(breaks = FFbreaks, show.legend = TRUE) + 
   scale_fill_manual(palette=colorsFF, values = breaklabelFF(8), name="Forage Fish Yield", drop=FALSE) +
