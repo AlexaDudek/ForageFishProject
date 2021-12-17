@@ -6,13 +6,14 @@ output: html_document
 ---
 ##INTRODUCTION##
 Here, add intro stuff!
-```{r}
+```{r message = FALSE}
 #Load ggplot2
 library(ggplot2)
+library(rEDM)
 ```
 
 
-```{r}
+```{r include = FALSE}
 #Loading all files
 
 source("./Functions/PopulationEquations.R")
@@ -20,6 +21,9 @@ source("./Functions/simulateData.R")
 source("./Functions/TradeOffAnalysis.R")
 source("./Functions/Plots.R")
 source("./Data/FinalData.R")
+source("./Functions/MSY.R")
+source("./CCM.R")
+source("./PlotsAndData.R")
 ```
 
 
@@ -109,8 +113,8 @@ After determining our parameters, we produced the same graphs as shown above in 
 For the following analysis, we used a single data set from the above parameters with fishing mortality from 0.0 to 1.0 and ### simulations. 
 
 ```{r}
-#Variable Ricker2_02 is a data frame with data for a Ricker two-species model simulation with the above parameters
-head(Ricker2_02) 
+#Variable toRicker_lowC_data is a data frame with data for a Ricker two-species model simulation with the above parameters
+head(toRicker_lowC_data) 
 ```
 
 Once the data is simulated, we first plot the population dynamics to ensure the model is producing reasonable data. 
