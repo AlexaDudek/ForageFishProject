@@ -48,31 +48,3 @@ simulateRicker_noise_nl <- function(x0, y0, rx, ry, Kx, Ky, cx, cy, fx, fy, numT
   }
   return(populations) #returns time series with data for both populations in a data frame
 }
-
-CCMdata = simulateRicker_noise_nl(x0 = 1.0, y0 = 0.05, rx = 3.0, ry = 3, Kx = 1, Ky = 0.1, cx = 0.01, cy = 0.2, fx=0.1, fy=0.1, 500)
-CCMdata <- CCMdata[-c(1:100),]
-
-Edata <- EmbedDimension(dataFrame = CCMdata, Tp = 0, columns = "yYield", target = "xYield", lib="1 250",pred="1 250", showPlot = FALSE)
-E = Edata$E[Edata$rho == max(Edata$rho)]
-CCM_output = CCM(dataFrame = CCMdata, E = E, Tp = 0, columns = "yYield", target = "xYield", 
-                 libSizes = "397 397 1", sample = 100, showPlot = TRUE)
-CCM = CCM_output$`yYield:xYield`
-
-cList = seq(0, 1, 0.1)
-cVSccm = data.frame(c = numeric(length(cList)), predictability = numeric(length(cList)))
-
-for(i in 1:length(cList)){
-  c = cList[i]
-  cVSccm$c[i] = c
-  CCMdata = simulateRicker_noise_nl(x0 = 1.0, y0 = 0.05, rx = 3.0, ry = 3, Kx = 1, Ky = 0.1, cx = 0.01, cy = c, fx=0.1, fy=0.1, 500)
-  CCMdata <- CCMdata[-c(1:100),]
-  Edata <- EmbedDimension(dataFrame = CCMdata, Tp = 0, columns = "yYield", target = "xYield", lib="1 250",pred="1 250", showPlot = FALSE)
-  E = Edata$E[Edata$rho == max(Edata$rho)]
-  CCM_output = CCM(dataFrame = CCMdata, E = E, Tp = 0, columns = "yYield", target = "xYield", 
-                   libSizes = "390 390 1", sample = 100, showPlot = FALSE)
-  CCM = CCM_output$`yYield:xYield`
-  cVSccm$predictability[i] = CCM
-}
-
-ggplot(data = cVSccm, aes(x = c, y = predictability)) +
-  geom_point()
