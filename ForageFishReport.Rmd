@@ -20,10 +20,9 @@ source("./Functions/PopulationEquations.R")
 source("./Functions/simulateData.R")
 source("./Functions/TradeOffAnalysis.R")
 source("./Functions/Plots.R")
-source("./Data/FinalData.R")
 source("./Functions/MSY.R")
-source("./CCM.R")
-source("./PlotsAndData.R")
+source("./Functions/CCM.R")
+source("./Data/PlotsAndData.R")
 ```
 
 
