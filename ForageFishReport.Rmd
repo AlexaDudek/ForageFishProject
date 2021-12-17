@@ -170,7 +170,7 @@ to_highC_PBiomass
 to_highC_PYield
 to_highC_FFYield
 ```
-When coupling strength is increased to 0.5, we see a stronger trade-off relationship with even higher predator yields and biomass at lower forage fish fishing mortality.
+When coupling strength is increased to 0.5, we see a stronger trade-off relationship with even higher predator yields and biomass at lower forage fish fishing mortality. Increasing contour steepness of predator yield indicates the increasing effect of forage fish fishing mortality. As species become more interdependent, forage fish fishing mortality affects predator yield more. More potential predator yield is lost at higher forage fish fishing effort, indicating stronger trade off. However, the effect of predator fishing mortality on forage fish yield, though increased with coupling, remains relatively small. 
 
 
 Through these methods, the existence of a trade-off relationship between forage fish species and their predators is verified. This information supports the growing motion for ecosystem based management as the effects of one species on the other are undeniable, especially in a predator-prey relationship. Still, there are questions that arise about our ability to quantify and detect these trade-off relationships to allow for ecosystem based fishing mortality suggestions. 
