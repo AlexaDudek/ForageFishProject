@@ -49,7 +49,7 @@ source("./Data/PlotsAndData.R")
 
 To accomplish the first goal of our project, showing how ecosystem based management is more sustainable than the currently used single species models, we sought to prove that there is a trade off relationship between forage fish species and their predators. Validation for this trade-off supports the idea that species should not be managed without consideration for the species they impact or are impacted by. To do this, we first needed to create a two-species model that acts as a proxy for ecosystem based management. This model would demonstrate interactions between the forage fish species and predator species and would show the impacts of forage fish dynamics on predator yields and biomass. 
 
-In beginning to refine our model, we created simulations of trade off analysis using the two-species model presented in Perretti et al. (cite). This model is relatively simple, but it does introduce a coupling strength factor between the two species. Through a series of functions, we simulated multiple time series with varying fishing mortality on both species. Predator and prey biomass and yields  were averaged for each time series and plotted against the corresponding fishing effort to show contours of biomass. Our initial parameters were taken from the supplemental information from Perretti et al., though we adjusted the carrying capacities based off of the common rule of 10% energy transfer and biomass size up a trophic level, which means the striped bass carrying capacity should be about 10% of the menhaden's.
+In beginning to refine our model, we created simulations of trade off analysis using the two-species model presented in Perretti et al.. This model is relatively simple, but it does introduce a coupling strength factor between the two species. Through a series of functions, we simulated multiple time series with varying fishing mortality on both species. Predator and prey biomass and yields  were averaged for each time series and plotted against the corresponding fishing effort to show contours of biomass. Our initial parameters were taken from the supplemental information from Perretti et al., though we adjusted the carrying capacities based off of the common rule of 10% energy transfer and biomass size up a trophic level, which means the striped bass carrying capacity should be about 10% of the menhaden's.
 
 #The functions can be found in Functions/PopulationEquations.R, Functions/simulateData.R, and Functions/TradeOffAnalysis.R. The functions were plotted through a function in Functions/PlottingThings.Rmd. Parameters for this data set can be found in Data/dataf.R
 ```{r}
@@ -126,7 +126,7 @@ numMeanYears <- 50 #averaging the last 50 years of each
 
 After determining our parameters, we produced the same graphs as shown above in the Perretti methods, this time using our generateTradeOff_Ricker function (./Functions/TradeOffAnalysis.R). This function takes an input of the parameters listed above along with vectors of fishing mortality to loop over and a number of times for the simulation to be ran. Time series at each fishing mortality pair are created inside the loop using a function called simulateRicker_noise (./Functions/simulateData.R), which outputs a data frame containing a single time series of predator and forage fish population sizes over time at constant fishing mortality. Then, biomass is averaged across the time series for both species and inputted into a new data frame in generateTradeOff_Ricker. Yields are also calculated for each series. The final output is a data frame with fishing mortality pairs, predator biomass and yield, and forage fish biomass and yield for a number of simulations. 
 
-For the following analysis, we used a single data set from the above parameters with fishing mortality from 0.0 to 1.0 and ### simulations. 
+For the following analysis, we used a single data set from the above parameters with fishing mortality from 0.0 to 1.0 and 50-year simulations. 
 
 ```{r}
 #Variable toRicker_lowC_data is a data frame with data for a Ricker two-species model simulation with the above parameters
@@ -146,7 +146,7 @@ tsRicker_Fishing_plots #./Functions/PlottingThings.Rmd
 ```
 With and without fishing, both populations fluctuate around an equilibrium, though the equilibrium are lower with fishing.  In the trade off graphs without fishing, we see that predator population size decreases some as forage fish population size increases. We assume that the increase in forage fish follows a decrease in predator biomass. When fishing is applied, striped bass biomass is  higher when forage fish biomass is highest.
 
-After verifying that our populations are fluctuating realistically with the chosen parameters, we plotted the trade-off relationships of biomass and yield. To compare our two-species (ecosystem based) model to a single species model, we simulated one time series of predator and forage fish biomass with a single species Ricker model using similar parameters, but no fishing mortality or coupling strength are added to the model. A single-species model does not account for dependency on other species or the ecosystem, so it often overestimates a maximum sustainable yield. When compared to two-species modeled data, single-species MSYs fall in regions that actually obtain lower yields and will cause decreases in biomass of both species. To demonstrate this, we overlaid our calculated single-species fishing mortality at MSY for both species on our two-species trade off graphs. This way, a visual representation of the discrepancies between the models is created. 
+After verifying that our populations are fluctuating realistically with the chosen parameters, we plotted the trade-off relationships of biomass and yield. To compare our two-species (ecosystem based) model to a single species model, we simulated one time series of predator and forage fish biomass with a single species Ricker model using the same r and K parameters, but no fishing mortality or coupling strength are added to the model. A single-species model does not account for dependency on other species or the ecosystem, so it often overestimates a maximum sustainable yield. When compared to two-species modeled data, single-species MSYs fall in regions that actually obtain lower yields and will cause decreases in biomass of both species. To demonstrate this, we overlaid our calculated single-species fishing mortality at MSY for both species on our two-species trade off graphs. This way, a visual representation of the discrepancies between the models is created. 
 
 
 ##RESULTS##
@@ -172,7 +172,6 @@ to_highC_FFYield
 ```
 When coupling strength is increased to 0.5, we see a stronger trade-off relationship with even higher predator yields and biomass at lower forage fish fishing mortality.
 
-#Results discussion for this portion of project
 
 Through these methods, the existence of a trade-off relationship between forage fish species and their predators is verified. This information supports the growing motion for ecosystem based management as the effects of one species on the other are undeniable, especially in a predator-prey relationship. Still, there are questions that arise about our ability to quantify and detect these trade-off relationships to allow for ecosystem based fishing mortality suggestions. 
 
@@ -187,7 +186,7 @@ To accomplish this, we used the rEDM R package to perform convergent cross-mappi
 
 tsRicker_nl_plots
 ```
-The dynamics created by the non-linear models are much more chaotic. As before, they fluctuate around the equilibrium point, though the fluctuations are wider. 
+The dynamics created by the non-linear models are much more chaotic. As before, they fluctuate around an equilibrium point, though the fluctuations are wider. 
 
 ```{r}
 ggplot(data = cVSccm, aes(x = c, y = predictability)) +
@@ -200,6 +199,13 @@ ggplot(data = cVSccm, aes(x = c, y = predictability)) +
   
 ```
 
-
 As is observed on the above plot, the convergent cross mapping output increases with increasing coupling factor, beginning to plateau once the coupling factor is around 0.5. This indicates that when forage fish and predators are more interdependent, the machine-learning algorithm detects a stronger causal relationship between them. Our parametric trade off analyses also demonstrated stronger trade off effects at higher coupling values. This shows that machine-learning analyses are able to detect species interdependence and trade off based on catch data.
+
+##DISCUSSION##
+
+Through our analysis, we have identified a trade-off relationship between forage fish species and their predators. Specifically, through visualizing biomass and yield contours, we showed that predators are negatively impacted by overfished forage fish. At lower forage fish fishing mortalities, fisheries will see higher predator biomass and yields.  Due to these trad-eoffs, which are inherent to forage fish management, single-species models will be less effective at maintaining overall ecosystem health and in turn will negatively impact catch of the commercially fished predator. When the single-species model was compared to our two-species model, the single-species model overestimated MSY for both species. Fishing at single-species suggestions actually produced lower yields of both species. 
+	
+If forage fish fishing is managed in the context of commercial predators, fisheries will benefit and obtain higher catches with less fishing effort required, which can be very economically beneficial. The two species model combines the specificity and legislative potential of single species stock assessments with the long-term consideration of overall ecosystem health (Howell 2021). For the sake of simplicity, the Ricker two species model is designed to remove menhaden from the system and add an equivalent number of striped bass each year; nature does not work in this way as the true relationship is not 1:1. This limitation of our model can be adjusted for specific systems if the coupling relationship is better understood, which would lead to even more robust results. The model can also be customized to better fit the parameters of the populations in question. As our parameters were chosen somewhat arbitrarily to optimize our outputs, this model may not work on real world data, but the simplicity of the Ricker model and coupling factor allow for personalization. 
+
+After validating the trade-off relationship between forage fish and their predators, we determined that machine learning can detect this relationship as well. Using the rEDM package, we graphed causal relationships at different coupling strengths between species. For this approach, we simulated chaotic nonlinear dynamics, which is more representative of real world systems. As seen in the positive trend of this figure, causality increases as coupling strength increases. Knowing that machine learning can detect these relationships is important in advancing ecosystem based management. Empirical dynamic modeling is a useful tool in ecosystem based management as it shows relationships between species, which is needed to validate ecosystem based management in the eyes of stakeholders and managers. 
 
