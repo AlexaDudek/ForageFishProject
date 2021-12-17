@@ -5,7 +5,13 @@ date: "12/15/2021"
 output: html_document
 ---
 ##INTRODUCTION##
-Here, add intro stuff!
+
+As global populations continue to increase, so does reliance on increasingly stressed and limited marine resources. Globally, fisheries are a major source of food and economic growth for many countries around the world, so understanding how to manage them sustainably is of critical importance. Historically, management has focused on single stocks and maximizing sustainable catch based on parametric models for individual species. This, however, ignores the many complex biological and environmental ecosystem interactions that inform population dynamics and underlie variation. There is a growing push towards modelling and management strategies that account for ecosystem-based interactions rather than analyzing single stocks in isolation (Howell et al, 2021).  Ecosystem models can often be complex, however, and focus on long term trends which may be unhelpful for stock management in the short term. Thus, we try to simplify the problem by focusing on one interaction,  that between forage fish and their piscivorous predators.
+
+Forage fish support a majority of the ocean's fisheries, either as the target species or the main food source for other commercially-relevant fish (Pikitch et al, 2012). Understanding the relationship between forage fish and their predators is imperative for fisheries management as over fishing either the prey or the predator species can have a major impact on the stability of the fishery (Howell et al, 2021). Current fisheries management solutions use catch-based data and single species stock assessments to quantify the populations of the target fish species. These models do well by giving important information about the current state of the stock; however, they often overestimate the extent to which a stock is being over fished or collapsed (Branch et al, 2010). An issue with using catch-based and single-species assessments for forage fish is that the forage fish are more interdependent and have more pressures than other commercial fish species. Forage fish make up a large proportion of the global catch, with five of the top ten fished species being forage fish (Pikitch et al, 2012). Along with heavy fishing pressure, forage fish make up a large portion of the diets of many commercial fish as well as marine mammals and seabirds.  
+
+The goal of this project was to determine if a simple two-species model could be used to achieve more desirable outcomes for predator and forage fish yields than similar single-species models. The models used were single species and two species Ricker models, and an Empirical Dynamic Modelling (EDM) approach using convergent cross-mapping was employed to determine if machine-learning methods could similarly validate the presence of a trade-off relationship between forage fish and their predators.
+
 ```{r message = FALSE}
 #Load ggplot2
 library(ggplot2)
