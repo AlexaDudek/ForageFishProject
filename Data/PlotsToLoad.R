@@ -1,0 +1,181 @@
+# File with all of data, functions, and calls for creating Figures
+library(rEDM)
+
+set.seed(8)
+# Perretti parameters
+x0_perretti = 0.4
+y0_perretti = 0.4
+rx_perretti = 3.8
+ry_perretti = 3.7
+Kx_perretti = 1
+Ky_perretti = 1
+c_perretti = 0.1
+
+
+#Fishing mortality lists for all sims
+FmxList <- seq(0.0,1.0,by=0.1)
+FmyList <- seq(0.0,1.0,by=0.1)
+
+#Perretti two species model data
+Perretti_sim <- generateTradeOff_Perretti(FmxList,FmyList,0.4,0.04,3.8,0.844,1,0.1,0.1)
+
+# Trade Off Parameters 
+x0 = 0.5
+y0 = 0.05
+rx = 2.0
+ry = 0.78
+Kx = 1
+Ky = 0.1
+
+# Ricker time series without fishing
+tsRicker_noFishing_data = simulateRicker_noise(x0, y0, rx, ry, Kx, Ky, 
+                                               cx = 0.2, cy = 0.2, fx = 0, fy = 0, 
+                                               numTimeSteps = 50)
+tsRicker_noFishing_plots = plotTests(tsRicker_noFishing_data)
+
+
+# Ricker time series with fishing
+tsRicker_Fishing_data = simulateRicker_noise(x0, y0, rx, ry, Kx, Ky,
+                                             cx = 0.2, cy = 0.2, fx = 0.4, fy = 0.4,
+                                             numTimeSteps = 50)
+tsRicker_Fishing_plots = plotTests(tsRicker_Fishing_data)
+
+
+### Trade Off Analyses 
+
+# Single Species Fmsy
+FF_SSmsy = Fmsy(rx, Kx)
+P_SSmsy = Fmsy(ry, Ky)
+
+FF_2Smsy = 0.55
+P_2Smsy = 0.3
+
+FmList = seq(0, 1, by = 0.05)
+
+# Trade Off c = 0.2
+cx_low = 0.2
+cy_low = 0.2
+
+toRicker_lowC_data = generateTradeOff_Ricker(FmList, FmList, x0, y0, rx, ry, Kx, Ky,
+                                             cx_low, cy_low, numTimeSteps = 50, numMeanYears = 50)
+
+# Trade Off c = 0.5
+cx_high = 0.5
+cy_high = 0.5 
+
+toRicker_highC_data = generateTradeOff_Ricker(FmList, FmList, x0, y0, rx, ry, Kx, Ky,
+                                              cx_high, cy_high, numTimeSteps = 50, numMeanYears = 50)
+
+# Determining consistent plotting breaks for each 'z' variable
+maxXYield = max(max(toRicker_highC_data$xYield), max(toRicker_lowC_data$xYield))
+maxYYield = max(max(toRicker_highC_data$yYield), max(toRicker_lowC_data$yYield))
+maxYBiomass = max(max(toRicker_highC_data$yBiomass), max(toRicker_lowC_data$yBiomass))
+
+FFbreaks = seq(0, maxXYield, length.out = 9)
+PYbreaks = seq(0, maxYYield, length.out = 9)
+PBbreaks = seq(0, maxYBiomass, length.out = 9)
+
+colorsFF <- function(x){
+  colors = colorRampPalette(c("mediumpurple4", "khaki"))( 8 )
+  colors[1:x]
+}
+
+colorsP <- function(x){
+  colors = colorRampPalette(c("dodgerblue4", "honeydew"))( 8 )
+  colors[1:x]
+}
+
+colorsPY <- function(x){
+  colors = colorRampPalette(c("dodgerblue4", "yellow"))( 8 )
+  colors[1:x]
+}
+
+breaklabelFF <- function(x){
+  labels = paste0(round(FFbreaks[1:8], 3), "-", round(FFbreaks[2:9],3))
+  labels[1:x]
+}
+
+breaklabelPB <- function(x){
+  labels = paste0(round(PBbreaks[1:8], 3), "-", round(PBbreaks[2:9],3))
+  labels[1:x]
+}
+
+breaklabelPY <- function(x){
+  labels = paste0(round(PYbreaks[1:8], 3), "-", round(PYbreaks[2:9],3))
+  labels[1:x] 
+}
+
+to_lowC_FFYield <- ggplot(toRicker_lowC_data, aes(x = FmX, y = FmY, z = xYield)) +
+  geom_contour_filled(breaks = FFbreaks, show.legend = TRUE) + 
+  scale_fill_manual(palette=colorsFF, values = breaklabelFF(8), name="Forage Fish Yield", drop=FALSE) +
+  theme(legend.position = "right") +
+  geom_contour(breaks = FFbreaks, color="grey")+
+  geom_hline(yintercept = P_SSmsy, color = "red") +
+  geom_hline(yintercept = P_2Smsy, linetype = "dashed", color = "red") +
+  geom_vline(xintercept = FF_SSmsy, color = "red") +
+  geom_vline(xintercept = FF_2Smsy, linetype = "dashed", color = "red") +
+  labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", 
+       title = paste("Trade Off Contour Analysis - Forage Fish Yield, c =", cx_low))
+
+to_lowC_PBiomass <- ggplot(toRicker_lowC_data, aes(x = FmX, y = FmY, z = yBiomass)) +
+  geom_contour_filled(breaks = PBbreaks, show.legend = TRUE) +
+  scale_fill_manual(palette=colorsP, values = breaklabelPB(8), name="Predator Biomass", drop=FALSE) +
+  theme(legend.position = "right") +
+  geom_contour(breaks = PBbreaks, color="grey")+
+  geom_hline(yintercept = P_SSmsy, color = "red") +
+  geom_hline(yintercept = P_2Smsy, linetype = "dashed", color = "red") +
+  geom_vline(xintercept = FF_SSmsy, color = "red") +
+  geom_vline(xintercept = FF_2Smsy, linetype = "dashed", color = "red") +
+  labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", 
+       title = paste("Trade Off Contour Analysis - Predator Biomass, c =", cx_low))
+
+to_lowC_PYield <- ggplot(toRicker_lowC_data, aes(x = FmX, y = FmY, z = yYield)) +
+  geom_contour_filled(breaks = PYbreaks, show.legend = TRUE) +
+  scale_fill_manual(palette=colorsPY, values = breaklabelPY(8), name="Predator Yield", drop=FALSE) +
+  theme(legend.position = "right") +
+  geom_contour(breaks = PYbreaks, color="grey")+
+  geom_hline(yintercept = P_SSmsy, color = "red") +
+  geom_hline(yintercept = P_2Smsy, linetype = "dashed", color = "red") +
+  geom_vline(xintercept = FF_SSmsy, color = "red") +
+  geom_vline(xintercept = FF_2Smsy, linetype = "dashed", color = "red") +
+  labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", 
+       title = paste("Trade Off Contour Analysis - Predator Yield, c =", cx_low))
+
+
+
+
+to_highC_FFYield <- ggplot(toRicker_highC_data, aes(x = FmX, y = FmY, z = xYield)) +
+  geom_contour_filled(breaks = FFbreaks, show.legend = TRUE) +
+  scale_fill_manual(palette=colorsFF, values = breaklabelFF(8), name="Forage Fish Yield", drop=FALSE) +
+  theme(legend.position = "right") +
+  geom_contour(breaks = FFbreaks, color="grey")+
+  geom_hline(yintercept = P_SSmsy, color = "red") +
+  geom_hline(yintercept = P_2Smsy, linetype = "dashed", color = "red") +
+  geom_vline(xintercept = FF_SSmsy, color = "red") +
+  geom_vline(xintercept = FF_2Smsy, linetype = "dashed", color = "red") +
+  labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", 
+       title = paste("Trade Off Contour Analysis - Forage Fish Yield, c =", cx_high))
+
+to_highC_PBiomass <- ggplot(toRicker_highC_data, aes(x = FmX, y = FmY, z = yBiomass)) +
+  geom_contour_filled(breaks = PBbreaks, show.legend = TRUE) + 
+  scale_fill_manual(palette=colorsP, values = breaklabelPB(8), name="Predator Biomass", drop=FALSE) +
+  theme(legend.position = "right") +
+  geom_contour(breaks = PBbreaks, color="grey")+
+  geom_hline(yintercept = P_SSmsy, color = "red") +
+  geom_hline(yintercept = P_2Smsy, linetype = "dashed", color = "red") +
+  geom_vline(xintercept = FF_SSmsy, color = "red") +
+  geom_vline(xintercept = FF_2Smsy, linetype = "dashed", color = "red") +
+  labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", 
+       title = paste("Trade Off Contour Analysis - Predator Yield, c =", cx_high))
+
+to_highC_PYield <- ggplot(toRicker_highC_data, aes(x = FmX, y = FmY, z = yYield)) +
+  geom_contour_filled(breaks = PYbreaks, show.legend = TRUE) +
+  scale_fill_manual(palette=colorsPY, values = breaklabelPY(8), name="Predator Yield", drop=FALSE) +
+  theme(legend.position = "right") +
+  geom_contour(breaks = PYbreaks, color="grey")+
+  geom_hline(yintercept = P_SSmsy, color = "red") +
+  geom_hline(yintercept = P_2Smsy, linetype = "dashed", color = "red") +
+  geom_vline(xintercept = FF_SSmsy, color = "red") +
+  geom_vline(xintercept = FF_2Smsy, linetype = "dashed", color = "red") +
+  labs(x = "Forage Fish Fishing Mortality", y = "Predator Fishing Mortality", 
+       title = paste("Trade Off Contour Analysis - Predator Yield, c =", cx_high))

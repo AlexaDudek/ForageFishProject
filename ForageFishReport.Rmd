@@ -15,6 +15,7 @@ library(rEDM)
 
 ```{r include = FALSE}
 #Loading all files
+fname_EDM_results = "./Data/EDM_results.Rdata"
 
 source("./Functions/PopulationEquations.R")
 source("./Functions/simulateData.R")
@@ -22,7 +23,18 @@ source("./Functions/TradeOffAnalysis.R")
 source("./Functions/Plots.R")
 source("./Functions/MSY.R")
 source("./Functions/CCM.R")
+source("./Data/PlotsToLoad.R")
+
+
+if(!file.exists(fname_EDM_results)){
 source("./Data/PlotsAndData.R")
+  save(cVSccm_no0,cVSccm,file=fname_EDM_results)
+}else{
+  load(fname_EDM_results)
+}
+
+
+
 ```
 
 
@@ -120,54 +132,57 @@ Once the data is simulated, we first plot the population dynamics to ensure the 
 
 ```{r}
 #Dynamics with no fishing mortality (fx = 0, fy = 0)
-plotTests(Ricker2_02_1_nofish) #./Functions/PlottingThings.Rmd
+tsRicker_noFishing_plots #./Functions/PlottingThings.Rmd
 ```
 
 ```{r}
 #Dynamics with fishing mortality (fx = 0.5, fy = 0.3)
-plotTests(Ricker2_02_1_fish) #./Functions/PlottingThings.Rmd
+tsRicker_Fishing_plots #./Functions/PlottingThings.Rmd
 ```
+With and without fishing, both populations fluctuate around an equilibrium, though the equilibrium are lower with fishing.  In the trade off graphs without fishing, we see that predator population size decreases some as forage fish population size increases. We assume that the increase in forage fish follows a decrease in predator biomass. When fishing is applied, striped bass biomass is  higher when forage fish biomass is highest.
 
-Add description of our specific plots and analysis of the dynamics
-
-After verifying that our populations are fluctuation realistically with the chosen parameters, we plotted the trade-off relationships of biomass and yield.
-```{r}
-#saving plots in variable
-Ricker2_plots <- plotTradeOff(Ricker2_02) #./Functions/PlottingThings.Rmd
-Ricker2_plots
-```
-Description of findings
-
-To compare our two-species (ecosystem based) model to a single species model, we simulated one time series of predator and forage fish biomass with a single species Ricker model using the following parameters. Fishing mortality and coupling are not added
-```{r include = FALSE}
-x0 <- #Initial forage fish population size
-  
-y0 <- #Initial predator population size
-  
-rx <- #Forage fish intrinsic growth rate
-  
-ry <- #Predator intrinsic growth rate
-  
-Kx <- #Forage fish carrying capacity
-  
-Ky <- #Predator carrying capacity
-  
-```
-
-A single-species model does not account for dependency on other species or the ecosystem, so it often overestimates a maximum sustainable yield. When compared to two-species modeled data, single-species MSYs fall in regions that actually obtain lower yields and will cause decreases in biomass of both species. To demonstrate this, we overlaid our calculated single-species fishing mortality at MSY for both species on our two-species trade off graphs. This way, a visual representation of the discrepancies between the models is created. 
+After verifying that our populations are fluctuating realistically with the chosen parameters, we plotted the trade-off relationships of biomass and yield. To compare our two-species (ecosystem based) model to a single species model, we simulated one time series of predator and forage fish biomass with a single species Ricker model using similar parameters, but no fishing mortality or coupling strength are added to the model. A single-species model does not account for dependency on other species or the ecosystem, so it often overestimates a maximum sustainable yield. When compared to two-species modeled data, single-species MSYs fall in regions that actually obtain lower yields and will cause decreases in biomass of both species. To demonstrate this, we overlaid our calculated single-species fishing mortality at MSY for both species on our two-species trade off graphs. This way, a visual representation of the discrepancies between the models is created. 
 
 
 ##RESULTS##
 ```{r}
-#add lines to saved variables of graphs 
+#Graphs with coupling strength at 0.2
+
+to_lowC_PBiomass
+to_lowC_PYield 
+to_lowC_FFYield
 ```
+Figures: Solid red lines represent MSYs suggested by the single-species Ricker model. Dashed lines represent the maximum yield given by our two-species Ricker model. 
 
-Talk about where the lines end up
+At a coupling strength of 0.2, predator biomass is highest at lower forager fish fishing mortality. The negative slant of the contours shows that predator biomass is impacted by forage fish dynamics. Similar trends are seen in the contours of predator and forage fish yields. Predator yield is highest when forage fish fishing mortality is low. This visualization validates the presence of a trade-off between Atlantic menhaden and striped bass. 
 
-Results discussion for this portion of project
+Because our analysis showed this trade-off relationship, we assumed the single-species models would not accurately determine sustainable or maximum yields. The intersection of the solid red lines falls outside of this maximum yield range. Though the dashed lines, the maximum yields from our two-species model, also fall outside of this range, they are much lower than the single-species suggestions. Our yields are also not representative of MSY because they are not accounting for a target biomass. However, this graph demonstrates that single-species management will produce lower yields by overestimating the MSY of both species. 
+
+```{r}
+#Graphs with coupling strength at 0.5
+
+to_highC_PBiomass
+to_highC_PYield
+to_highC_FFYield
+```
+When coupling strength is increased to 0.5, we see a stronger trade-off relationship with even higher predator yields and biomass at lower forage fish fishing mortality.
+
+#Results discussion for this portion of project
 
 Through these methods, the existence of a trade-off relationship between forage fish species and their predators is verified. This information supports the growing motion for ecosystem based management as the effects of one species on the other are undeniable, especially in a predator-prey relationship. Still, there are questions that arise about our ability to quantify and detect these trade-off relationships to allow for ecosystem based fishing mortality suggestions. 
 
 Specifically, machine learning can be used to detect causal relationships between variables. Empirical dynamical modeling is a nonparametric approach that models changes in nonlinear dynamic systems, such as populations over time. 
 
 ##EMPIRICAL DYNAMIC MODELING METHODS##
+
+```{r}
+ggplot(data = cVSccm, aes(x = c, y = predictability)) +
+  geom_point(size = 2) +
+  geom_smooth(data =cVSccm_no0, aes(x = c, y = predictability), method="lm", formula = y~log(x), fill="blue", fullrange=TRUE) +
+  theme_bw() + 
+  theme(plot.title = element_text(face="bold")) +
+  labs(x = "Coupling Factor", y = "Predictability", 
+       title = "Linear Model Coupling Factor vs \n Non-Parametric Convergent Cross Mapping Predictability")
+  
+```
+
