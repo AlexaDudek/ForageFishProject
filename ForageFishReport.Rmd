@@ -4,7 +4,7 @@ author: "Jaydi Swanson"
 date: "12/15/2021"
 output: html_document
 ---
-
+##INTRODUCTION##
 Here, add intro stuff!
 ```{r}
 #Load ggplot2
@@ -23,13 +23,13 @@ source("./Data/FinalData.R")
 ```
 
 
-##Methods
+##TRADE-OFF ANALYSIS METHODS##
 
 ###Perretti Model
 
-To accomplish the first goal of our project, to show how ecosystem based management is more sustainable than the currently used single species models, we sought to prove that there is a trade off relationship between forage fish species and their predators. Validation for this trade-off supports the idea that species should not be managed without consideration for the species they impact or vice versa. To do this, we first needed to create a two-species model that acts as a proxy for ecosystem based management. This model would demonstrate interactions between the forage fish species and predator species and would show the impacts of forage fish dynamics on predator yields and biomass. 
+To accomplish the first goal of our project, showing how ecosystem based management is more sustainable than the currently used single species models, we sought to prove that there is a trade off relationship between forage fish species and their predators. Validation for this trade-off supports the idea that species should not be managed without consideration for the species they impact or are impacted by. To do this, we first needed to create a two-species model that acts as a proxy for ecosystem based management. This model would demonstrate interactions between the forage fish species and predator species and would show the impacts of forage fish dynamics on predator yields and biomass. 
 
-In beginning to refine our model, we created simulations of trade off analysis using the two-species model presented in Perretti et al. (cite). This model is relatively simple, but it does introduce a coupling strength factor between the two species. Through a series of functions, we simulated multiple time series with varying fishing mortality on both species. Predator and prey biomass and yields  waere averaged for each time series and plotted against the corresponding fishing effort to show contours of biomass. Our initial parameters were taken from the supplemental information from Perretti et al., though we adjusted the carrying capacities based off of the common rule of 10% energy transfer and biomass size up a trophic level, keeping the striped bass carrying capacity at only 10% of the menhaden's.
+In beginning to refine our model, we created simulations of trade off analysis using the two-species model presented in Perretti et al. (cite). This model is relatively simple, but it does introduce a coupling strength factor between the two species. Through a series of functions, we simulated multiple time series with varying fishing mortality on both species. Predator and prey biomass and yields  were averaged for each time series and plotted against the corresponding fishing effort to show contours of biomass. Our initial parameters were taken from the supplemental information from Perretti et al., though we adjusted the carrying capacities based off of the common rule of 10% energy transfer and biomass size up a trophic level, which means the striped bass carrying capacity should be about 10% of the menhaden's.
 
 #The functions can be found in Functions/PopulationEquations.R, Functions/simulateData.R, and Functions/TradeOffAnalysis.R. The functions were plotted through a function in Functions/PlottingThings.Rmd. Parameters for this data set can be found in Data/dataf.R
 ```{r}
@@ -153,6 +153,8 @@ Ky <- #Predator carrying capacity
 
 A single-species model does not account for dependency on other species or the ecosystem, so it often overestimates a maximum sustainable yield. When compared to two-species modeled data, single-species MSYs fall in regions that actually obtain lower yields and will cause decreases in biomass of both species. To demonstrate this, we overlaid our calculated single-species fishing mortality at MSY for both species on our two-species trade off graphs. This way, a visual representation of the discrepancies between the models is created. 
 
+
+##RESULTS##
 ```{r}
 #add lines to saved variables of graphs 
 ```
@@ -164,3 +166,5 @@ Results discussion for this portion of project
 Through these methods, the existence of a trade-off relationship between forage fish species and their predators is verified. This information supports the growing motion for ecosystem based management as the effects of one species on the other are undeniable, especially in a predator-prey relationship. Still, there are questions that arise about our ability to quantify and detect these trade-off relationships to allow for ecosystem based fishing mortality suggestions. 
 
 Specifically, machine learning can be used to detect causal relationships between variables. Empirical dynamical modeling is a nonparametric approach that models changes in nonlinear dynamic systems, such as populations over time. 
+
+##EMPIRICAL DYNAMIC MODELING METHODS##
