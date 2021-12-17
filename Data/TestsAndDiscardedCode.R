@@ -8,9 +8,6 @@ FFbreaks = seq(0, maxXYield, length.out = 9)
 PYbreaks = seq(0, maxXYield, length.out = 9)
 PBbreaks = seq(0, maxXYield, length.out = 9)
 
-FFcolors = colorRampPalette(c("mediumpurple4", "khaki"))
-PBcolors = colorRampPalette(c("dodgerblue4", "honeydew"))
-
 colorsFF <- function(x){
   colors = colorRampPalette(c("mediumpurple4", "khaki"))( 8 )
   colors[1:x]
@@ -27,8 +24,13 @@ breaklabelFF <- function(x){
 }
 
 breaklabelPB <- function(x){
-  labels = paste0(round(FFbreaks[1:8], 3), "-", round(FFbreaks[2:9],3))
+  labels = paste0(round(PBbreaks[1:8], 3), "-", round(PBbreaks[2:9],3))
   labels[1:x]
+}
+
+breaklabelPY <- function(x){
+  labels = paste0(round(PYbreaks[1:8], 3), "-", round(PYbreaks[2:9],3))
+  labels[1:x] 
 }
 
 testPlot_highC <- ggplot(toRicker_highC_data, aes(x = FmX, y = FmY, z = xYield)) +

@@ -1,4 +1,5 @@
 # CCM function
+library(rEDM)
 
 forageFishRicker_noise_nl <- function(x0, y0, r, K, c, f){
   
